@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="admin项目的nginx配置需要更改的时候，怎么样验证配置是否ok呢？ 一、nginx常用命令123456789101112131415161718192021222324252627282930313233// 1. startnginx// 2. 停止nginxnginx -s stopnginx -s quit// 3. 重载nginx配置nginx -s reloadnginx -s">
+<meta name="keywords" content="nginx,localhost">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx 本地部署及问题">
+<meta property="og:url" content="http://yoursite.com/2018/09/07/nginx-本地部署及问题/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="admin项目的nginx配置需要更改的时候，怎么样验证配置是否ok呢？ 一、nginx常用命令123456789101112131415161718192021222324252627282930313233// 1. startnginx// 2. 停止nginxnginx -s stopnginx -s quit// 3. 重载nginx配置nginx -s reloadnginx -s">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.400Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nginx 本地部署及问题">
+<meta name="twitter:description" content="admin项目的nginx配置需要更改的时候，怎么样验证配置是否ok呢？ 一、nginx常用命令123456789101112131415161718192021222324252627282930313233// 1. startnginx// 2. 停止nginxnginx -s stopnginx -s quit// 3. 重载nginx配置nginx -s reloadnginx -s">
+
+<link rel="canonical" href="http://yoursite.com/2018/09/07/nginx-本地部署及问题/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>nginx 本地部署及问题 | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/07/nginx-本地部署及问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          nginx 本地部署及问题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-09-07 20:15:35" itemprop="dateCreated datePublished" datetime="2018-09-07T20:15:35+00:00">2018-09-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>admin项目的nginx配置需要更改的时候，怎么样验证配置是否ok呢？</p>
+<h3 id="一、nginx常用命令"><a href="#一、nginx常用命令" class="headerlink" title="一、nginx常用命令"></a>一、nginx常用命令</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">// 1. start</span><br><span class="line">nginx</span><br><span class="line">// 2. 停止nginx</span><br><span class="line">nginx -s stop</span><br><span class="line">nginx -s quit</span><br><span class="line">// 3. 重载nginx配置</span><br><span class="line">nginx -s reload</span><br><span class="line">nginx -s quit</span><br><span class="line">// 4. 指定配置的文件</span><br><span class="line">nginx -c /usr/<span class="built_in">local</span>/nginx/nginx.conf</span><br><span class="line">// 5. 检查配置文件是否正确</span><br><span class="line">nginx -t </span><br><span class="line">// 6. 帮助信息</span><br><span class="line">nginx -h</span><br><span class="line">nginx -?</span><br><span class="line">// 7. 查看nginx版本</span><br><span class="line">nginx -v</span><br><span class="line">nginx -V</span><br><span class="line">// 8 使用信号</span><br><span class="line">// 8.1 获得pid</span><br><span class="line">ps aux | grep nginx</span><br><span class="line">cat /path/to/nginx.pid</span><br><span class="line">// 8.2从容停止nginx，等所有结束后关闭服务</span><br><span class="line">ps aux | grep nginx</span><br><span class="line"><span class="built_in">kill</span> -QUIT pid</span><br><span class="line">// 8.3 nginx快速停止命令，立刻关闭进程</span><br><span class="line">ps aux | grep nginx</span><br><span class="line"><span class="built_in">kill</span> -TERM pid</span><br><span class="line">// 8.4 强制停止命令</span><br><span class="line"><span class="built_in">kill</span> -9 pid</span><br><span class="line">// 9. 查看占用端口的pid</span><br><span class="line">lsof -i :8080</span><br><span class="line">lsof -i :端口号| grep LISTEN | awk <span class="string">'&#123; print $2; &#125;'</span> | head -n 2 | grep -v PID</span><br></pre></td></tr></table></figure>
+<h3 id="二、更改的配置文件"><a href="#二、更改的配置文件" class="headerlink" title="二、更改的配置文件"></a>二、更改的配置文件</h3><ol>
+<li><p>更改前，有hub的配置</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># envs: ["test", "uat", "staging", "live"]</span></span><br><span class="line"><span class="comment"># cids: ["id", "th"]</span></span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">    server_name  c-api-dp.&#123;&#123; domain_env_flag &#125;&#125;xxxxx.&#123;&#123; domain_suffix &#125;&#125;;</span><br><span class="line">    <span class="attribute">access_log</span>   <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        proxy_pass              http://dp_api_&#123;&#123; env &#125;&#125;_&#123;&#123; cid &#125;&#125;;</span><br><span class="line">        <span class="attribute">include</span>                 django_proxy_params;</span><br><span class="line">        <span class="attribute">include</span>                 gzip_params;</span><br><span class="line">        <span class="attribute">proxy_intercept_errors</span>  <span class="literal">on</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;% if cid == 'id' %&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">    server_name  dp-admin.&#123;&#123; domain_env_flag &#125;&#125;xxxxx.io;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        <span class="attribute">return</span>   <span class="number">307</span>  https://<span class="variable">$host</span><span class="variable">$request_uri</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">443</span> ssl http2;</span><br><span class="line">    server_name  dp-admin.&#123;&#123; domain_env_flag &#125;&#125;xxxxx.io;</span><br><span class="line"></span><br><span class="line">    <span class="comment">## default page ##</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">      <span class="attribute">try_files</span>     <span class="variable">$uri</span>      /digital-purchase/index.html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">## end default page ##</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">## Start of hub_admin ##</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /hub/static/ &#123;</span><br><span class="line">        alias                   /data/xxxxx/&#123;&#123; env &#125;&#125;/&#123;&#123; project_name &#125;&#125;-&#123;&#123; cid &#125;&#125;/hub/static/;</span><br><span class="line">        <span class="attribute">expires</span>                 <span class="number">30d</span>;</span><br><span class="line">        <span class="attribute">access_log</span>              <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">        <span class="attribute">include</span>                 gzip_params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /hub &#123;</span><br><span class="line">        <span class="attribute">try_files</span>     <span class="variable">$uri</span>      /hub/index.html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> = /hub/index.html &#123;</span><br><span class="line">        alias                 /data/xxxxx/&#123;&#123; env &#125;&#125;/&#123;&#123; project_name &#125;&#125;-&#123;&#123; cid &#125;&#125;/hub/index.html;</span><br><span class="line">        <span class="attribute">expires</span>               -<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">etag</span>                  <span class="literal">on</span>;</span><br><span class="line">        <span class="attribute">include</span>               gzip_params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">## End of hub_admin ##</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">## Start of dp_admin_portal ##</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /digital-purchase/static/ &#123;</span><br><span class="line">        alias                   /data/xxxxx/&#123;&#123; env &#125;&#125;/&#123;&#123; project_name &#125;&#125;-&#123;&#123; cid &#125;&#125;/windrunner/static/;</span><br><span class="line">        <span class="attribute">expires</span>                 <span class="number">30d</span>;</span><br><span class="line">        <span class="attribute">access_log</span>              <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">        <span class="attribute">include</span>                 gzip_params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /digital-purchase &#123;</span><br><span class="line">        <span class="attribute">try_files</span>     <span class="variable">$uri</span>      /digital-purchase/index.html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> = /digital-purchase/index.html &#123;</span><br><span class="line">        alias                 /data/xxxxx/&#123;&#123; env &#125;&#125;/&#123;&#123; project_name &#125;&#125;-&#123;&#123; cid &#125;&#125;/windrunner/index.html;</span><br><span class="line">        <span class="attribute">expires</span>               -<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">etag</span>                  <span class="literal">on</span>;</span><br><span class="line">        <span class="attribute">include</span>               gzip_params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">## End of dp_admin_portal ##</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">## Start of dp_admin_api ##</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /api/ &#123;</span><br><span class="line">        proxy_pass            http://dp_admin_&#123;&#123; env &#125;&#125;_&#123;&#123; cid &#125;&#125;;</span><br><span class="line">        <span class="attribute">include</span>               django_proxy_params;</span><br><span class="line">        <span class="attribute">include</span>               gzip_params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">## End of dp_admin ##</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>更改后，去掉hub的配置</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># envs: ["test", "uat", "staging", "live"]</span></span><br><span class="line"><span class="comment"># cids: ["id", "th"]</span></span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">    server_name  c-api-dp.&#123;&#123; domain_env_flag &#125;&#125;xxxxx.&#123;&#123; domain_suffix &#125;&#125;;</span><br><span class="line">    <span class="attribute">access_log</span>   <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        proxy_pass              http://dp_api_&#123;&#123; env &#125;&#125;_&#123;&#123; cid &#125;&#125;;</span><br><span class="line">        <span class="attribute">include</span>                 django_proxy_params;</span><br><span class="line">        <span class="attribute">include</span>                 gzip_params;</span><br><span class="line">        <span class="attribute">proxy_intercept_errors</span>  <span class="literal">on</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;% if cid == 'id' %&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">    server_name  dp-admin.&#123;&#123; domain_env_flag &#125;&#125;xxxxx.io;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        <span class="attribute">return</span>   <span class="number">307</span>  https://<span class="variable">$host</span><span class="variable">$request_uri</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">443</span> ssl http2;</span><br><span class="line">    server_name  dp-admin.&#123;&#123; domain_env_flag &#125;&#125;xxxxx.io;</span><br><span class="line"></span><br><span class="line">    <span class="comment">## Start of hub_admin ##</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /hub/static/ &#123;</span><br><span class="line">        alias                   /data/xxxxx/&#123;&#123; env &#125;&#125;/&#123;&#123; project_name &#125;&#125;-&#123;&#123; cid &#125;&#125;/hub/static/;</span><br><span class="line">        <span class="attribute">expires</span>                 <span class="number">30d</span>;</span><br><span class="line">        <span class="attribute">access_log</span>              <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">        <span class="attribute">include</span>                 gzip_params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /hub &#123;</span><br><span class="line">        <span class="attribute">try_files</span>     <span class="variable">$uri</span>      /hub/index.html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> = /hub/index.html &#123;</span><br><span class="line">        alias                 /data/xxxxx/&#123;&#123; env &#125;&#125;/&#123;&#123; project_name &#125;&#125;-&#123;&#123; cid &#125;&#125;/hub/index.html;</span><br><span class="line">        <span class="attribute">expires</span>               -<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">etag</span>                  <span class="literal">on</span>;</span><br><span class="line">        <span class="attribute">include</span>               gzip_params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">## End of hub_admin ##</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">## Start of dp_admin_portal ##</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /static/ &#123;</span><br><span class="line">        alias                   /data/xxxxx/&#123;&#123; env &#125;&#125;/&#123;&#123; project_name &#125;&#125;-&#123;&#123; cid &#125;&#125;/windrunner/static/;</span><br><span class="line">        <span class="attribute">expires</span>                 <span class="number">30d</span>;</span><br><span class="line">        <span class="attribute">access_log</span>              <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">        <span class="attribute">include</span>                 gzip_params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        <span class="attribute">try_files</span>     <span class="variable">$uri</span>      /index.html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> = /index.html &#123;</span><br><span class="line">        alias                 /data/xxxxx/&#123;&#123; env &#125;&#125;/&#123;&#123; project_name &#125;&#125;-&#123;&#123; cid &#125;&#125;/windrunner/index.html;</span><br><span class="line">        <span class="attribute">expires</span>               -<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">etag</span>                  <span class="literal">on</span>;</span><br><span class="line">        <span class="attribute">include</span>               gzip_params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">## End of dp_admin_portal ##</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">## Start of dp_admin_api ##</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /api/ &#123;</span><br><span class="line">        proxy_pass            http://dp_admin_&#123;&#123; env &#125;&#125;_&#123;&#123; cid &#125;&#125;;</span><br><span class="line">        <span class="attribute">include</span>               django_proxy_params;</span><br><span class="line">        <span class="attribute">include</span>               gzip_params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">## End of dp_admin ##</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="三、本地验证nginx配置是否正确"><a href="#三、本地验证nginx配置是否正确" class="headerlink" title="三、本地验证nginx配置是否正确"></a>三、本地验证nginx配置是否正确</h3><p>在项目的deploy文件下，新建 nginx.conf，内容如下<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">user</span>  root staff;</span><br><span class="line"><span class="attribute">worker_processes</span>  <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">  <span class="attribute">worker_connections</span>  <span class="number">3003</span>;  <span class="comment">## Default: 1024</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">  <span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">## Start of admin_api ##</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span><span class="regexp"> ^~</span> /api/ &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span>            http://localhost:3003;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">## End of admin_api ##</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">## Start of admin ##</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /static&#123;</span><br><span class="line">        <span class="attribute">alias</span>                    /Users/weiqian/Desktop/xxxxx/Windrunner/build/windrunner/static/;</span><br><span class="line">        <span class="attribute">expires</span>                 <span class="number">30d</span>;</span><br><span class="line">        <span class="attribute">access_log</span>              <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        <span class="attribute">try_files</span>     <span class="variable">$uri</span>       /index.html;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">## End of admin ##</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>执行如下脚本<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Windrunner git:(feature-ui) lsof -i :8080</span><br><span class="line">➜  Windrunner git:(feature-ui) nginx -c /Users/weiqian/Desktop/xxxxx/Windrunner/deploy/nginx.conf</span><br><span class="line">➜  Windrunner git:(feature-ui) nginx -t</span><br><span class="line">nginx: the configuration file /usr/<span class="built_in">local</span>/etc/nginx/nginx.conf syntax is ok</span><br><span class="line">nginx: configuration file /usr/<span class="built_in">local</span>/etc/nginx/nginx.conf <span class="built_in">test</span> is successful</span><br></pre></td></tr></table></figure></p>
+<p>放问网页 <a href="http://localhost:8080" target="_blank" rel="noopener">http://localhost:8080</a> 可以正常访问，也就是说我们本地的配置是ok的。</p>
+<h3 id="四、线上访问验证"><a href="#四、线上访问验证" class="headerlink" title="四、线上访问验证"></a>四、线上访问验证</h3><p>线上访问页面还是出错，js路径不对，那么就是说打包出来的静态文件可能不对，查看jenkins的日志报错如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&gt; node scripts/build.js</span><br><span class="line"></span><br><span class="line">&#123; Error: Command failed: npm run oldbuild</span><br><span class="line"></span><br><span class="line">Warning: DISABLE_ESLINT is deprecated, use ESLINT=none instead has been deprecated.</span><br><span class="line">TypeError: Invalid data, chunk must be a string or buffer, not undefined</span><br><span class="line">    at Socket.write (net.js:701:11)</span><br><span class="line">    at nodeDeprecate (/workspace/node_modules/deprecate/index.js:22:22)</span><br><span class="line">    at deprecate (/workspace/node_modules/deprecate/index.js:11:3)</span><br><span class="line">    at Object.&lt;anonymous&gt; (/workspace/node_modules/af-webpack/lib/getConfig.js:81:26)</span><br><span class="line">    at Module._compile (module.js:635:30)</span><br><span class="line">    at Object.Module._extensions..js (module.js:646:10)</span><br><span class="line">    at Module.load (module.js:554:32)</span><br><span class="line">    at tryModuleLoad (module.js:497:12)</span><br><span class="line">    at Function.Module._load (module.js:489:3)</span><br><span class="line">    at Module.require (module.js:579:17)</span><br><span class="line">    at require (internal/module.js:11:18)</span><br><span class="line">    at Object.&lt;anonymous&gt; (/workspace/node_modules/af-webpack/getConfig.js:1:18)</span><br><span class="line">    at Module._compile (module.js:635:30)</span><br><span class="line">    at Object.Module._extensions..js (module.js:646:10)</span><br><span class="line">    at Module.load (module.js:554:32)</span><br><span class="line">    at tryModuleLoad (module.js:497:12)</span><br></pre></td></tr></table></figure></p>
+<p>线上有报错，最后显示build成功了，如果是这样，我们本地的build会不会也有问题，验证了下ok<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rm -rf node_modules</span><br><span class="line">rm -rf build</span><br><span class="line">npm i</span><br><span class="line">npm run build</span><br></pre></td></tr></table></figure></p>
+<p>报错如下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&gt; ant-design-pro@1.3.0 build /Users/weiqian/Desktop/xxxxx/Windrunner</span><br><span class="line">&gt; node scripts/build.js</span><br><span class="line"></span><br><span class="line">&#123; Error: Command failed: npm run oldbuild</span><br><span class="line"></span><br><span class="line">Warning: DISABLE_ESLINT is deprecated, use ESLINT=none instead has been deprecated.</span><br><span class="line">TypeError [ERR_INVALID_ARG_TYPE]: The <span class="string">"chunk"</span> argument must be one of <span class="built_in">type</span> string or Buffer. Received <span class="built_in">type</span> undefined</span><br><span class="line">    at validChunk (_stream_writable.js:259:10)</span><br><span class="line">    at Socket.Writable.write (_stream_writable.js:293:21)</span><br><span class="line">    at nodeDeprecate (/Users/weiqian/Desktop/xxxxx/Windrunner/node_modules/deprecate/index.js:22:22)</span><br><span class="line">    at deprecate (/Users/weiqian/Desktop/xxxxx/Windrunner/node_modules/deprecate/index.js:11:3)</span><br><span class="line">    at Object.&lt;anonymous&gt; (/Users/weiqian/Desktop/xxxxx/Windrunner/node_modules/af-webpack/lib/getConfig.js:81:26)</span><br><span class="line">    at Module._compile (internal/modules/cjs/loader.js:678:30)</span><br><span class="line">    at Object.Module._extensions..js (internal/modules/cjs/loader.js:689:10)</span><br><span class="line">    at Module.load (internal/modules/cjs/loader.js:589:32)</span><br><span class="line">    at tryModuleLoad (internal/modules/cjs/loader.js:528:12)</span><br><span class="line">    at Function.Module._load (internal/modules/cjs/loader.js:520:3)</span><br><span class="line">    at Module.require (internal/modules/cjs/loader.js:626:17)</span><br><span class="line">    at require (internal/modules/cjs/helpers.js:20:18)</span><br><span class="line">    at Object.&lt;anonymous&gt; (/Users/weiqian/Desktop/xxxxx/Windrunner/node_modules/af-webpack/getConfig.js:1:18)</span><br><span class="line">    at Module._compile (internal/modules/cjs/loader.js:678:30)</span><br><span class="line">    at Object.Module._extensions..js (internal/modules/cjs/loader.js:689:10)</span><br><span class="line">    at Module.load (internal/modules/cjs/loader.js:589:32)</span><br><span class="line">[graceful-process<span class="comment">#4201] exit with code:1</span></span><br><span class="line">npm ERR! code ELIFECYCLE</span><br><span class="line">npm ERR! errno 1</span><br><span class="line">npm ERR! ant-design-pro@1.3.0 oldbuild: `cross-env DISABLE_ESLINT=none roadhog build`</span><br><span class="line">npm ERR! Exit status 1</span><br><span class="line">npm ERR!</span><br><span class="line">npm ERR! Failed at the ant-design-pro@1.3.0 oldbuild script.</span><br><span class="line">npm ERR! This is probably not a problem with npm. There is likely additional logging output above.</span><br><span class="line"></span><br><span class="line">npm ERR! A complete <span class="built_in">log</span> of this run can be found <span class="keyword">in</span>:</span><br><span class="line">npm ERR!     /Users/weiqian/.npm/_logs/2018-09-07T10_31_10_452Z-debug.log</span><br><span class="line"></span><br><span class="line">    at ChildProcess.exithandler (child_process.js:282:12)</span><br><span class="line">    at ChildProcess.emit (events.js:182:13)</span><br><span class="line">    at maybeClose (internal/child_process.js:947:16)</span><br><span class="line">    at Socket.stream.socket.on (internal/child_process.js:368:11)</span><br><span class="line">    at Socket.emit (events.js:182:13)</span><br><span class="line">    at Pipe._handle.close [as _onclose] (net.js:598:12) killed: <span class="literal">false</span>, code: 1, signal: null, cmd: <span class="string">'npm run oldbuild'</span> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>npm的package.json配置<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "oldbuild": "cross-env DISABLE_ESLINT=none roadhog build",</span><br><span class="line">    "build": "node scripts/build.js"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>更改配置如下<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "oldbuild": "cross-env ESLINT=none roadhog build",</span><br><span class="line">    "build": "node scripts/build.js"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译如下成功<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">➜  Windrunner git:(feature-ui) ✗ npm run build</span><br><span class="line"></span><br><span class="line">&gt; ant-design-pro@1.3.0 build /Users/weiqian/Desktop/xxxxx/Windrunner</span><br><span class="line">&gt; node scripts/build.js</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt; ant-design-pro@1.3.0 oldbuild /Users/weiqian/Desktop/xxxxx/Windrunner</span><br><span class="line">&gt; cross-env ESLINT=none roadhog build</span><br><span class="line"></span><br><span class="line">Compiled successfully.</span><br><span class="line"></span><br><span class="line">File sizes after gzip:</span><br><span class="line"></span><br><span class="line">  694.35 KB  windrunner/index.fccc1fd9.js</span><br><span class="line">  44.58 KB   windrunner/index.4c60e904.css</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Successful!</span><br></pre></td></tr></table></figure></p>
+<p>本地build成功了，我们放到了jenkins试了下果然编译成功了，访问线上页面是ok的。</p>
+<h3 id="五、其他案例记录"><a href="#五、其他案例记录" class="headerlink" title="五、其他案例记录"></a>五、其他案例记录</h3><p>把域名 <a href="https://dp-admin.test.xxxxx.io/" target="_blank" rel="noopener">https://dp-admin.test.xxxxx.io/</a> 换成 <a href="https://dp-admin.test.xxxxx.io/id" target="_blank" rel="noopener">https://dp-admin.test.xxxxx.io/id</a><br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">user</span>  root staff;</span><br><span class="line"><span class="attribute">worker_processes</span>  <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">  <span class="attribute">worker_connections</span>  <span class="number">3003</span>;  <span class="comment">## Default: 1024</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">  <span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">## Start of admin_api ##</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span><span class="regexp"> ^~</span> /api/ &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span>            http://localhost:3003;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">## End of admin_api ##</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">## Start of admin ##</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /static &#123;</span><br><span class="line">        <span class="attribute">alias</span>                    /Users/weiqian/Desktop/xxxxx/Windrunner/build/windrunner/static/;</span><br><span class="line">        <span class="attribute">expires</span>                 <span class="number">30d</span>;</span><br><span class="line">        <span class="attribute">access_log</span>              <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /id &#123;</span><br><span class="line">        <span class="attribute">try_files</span>     <span class="variable">$uri</span>       /index.html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> = /index.html &#123;</span><br><span class="line">        <span class="attribute">alias</span>                 /Users/weiqian/Desktop/xxxxx/Windrunner/build/windrunner/index.html;</span><br><span class="line">        <span class="attribute">expires</span>               -<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">etag</span>                  <span class="literal">on</span>;</span><br><span class="line">        <span class="attribute">include</span>               gzip_params;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">## End of admin ##</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>执行代码 </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">➜  Windrunner git:(<span class="built_in">test</span>) lsof -i :8080</span><br><span class="line">COMMAND     PID    USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME</span><br><span class="line">Google    23206 weiqian  149u  IPv4 0xd18ff623edf3bb69      0t0  TCP localhost:59974-&gt;localhost:http-alt (ESTABLISHED)</span><br><span class="line">Google    23206 weiqian  202u  IPv4 0xd18ff623e145a789      0t0  TCP localhost:59936-&gt;localhost:http-alt (ESTABLISHED)</span><br><span class="line">nginx     35357 weiqian    8u  IPv4 0xd18ff623dafe64c9      0t0  TCP *:http-alt (LISTEN)</span><br><span class="line">nginx     35555 weiqian    7u  IPv4 0xd18ff623d9afbb69      0t0  TCP localhost:http-alt-&gt;localhost:59936 (ESTABLISHED)</span><br><span class="line">nginx     35555 weiqian    8u  IPv4 0xd18ff623dafe64c9      0t0  TCP *:http-alt (LISTEN)</span><br><span class="line">nginx     35555 weiqian   10u  IPv4 0xd18ff623f9b5f789      0t0  TCP localhost:http-alt-&gt;localhost:59974 (ESTABLISHED)</span><br><span class="line">➜  Windrunner git:(<span class="built_in">test</span>) <span class="built_in">kill</span> -9 23206 35357 35555</span><br><span class="line">➜  Windrunner git:(<span class="built_in">test</span>) nginx -c /Users/weiqian/Desktop/xxxxx/Windrunner/deploy/nginx.conf</span><br><span class="line">nginx: [warn] the <span class="string">"user"</span> directive makes sense only <span class="keyword">if</span> the master process runs with super-user privileges, ignored <span class="keyword">in</span> /Users/weiqian/Desktop/xxxxx/Windrunner/deploy/nginx.conf:1</span><br><span class="line">nginx: [emerg] open() <span class="string">"/Users/weiqian/Desktop/xxxxx/Windrunner/deploy/gzip_params"</span> failed (2: No such file or directory) <span class="keyword">in</span> /Users/weiqian/Desktop/xxxxx/Windrunner/deploy/nginx.conf:38</span><br></pre></td></tr></table></figure>
+<p>emerg报错gzip_params改正下nginx配置，屏蔽掉gzip_params<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> = /index.html &#123;</span><br><span class="line">       <span class="attribute">alias</span>                 /Users/weiqian/Desktop/xxxxx/Windrunner/build/windrunner/index.html;</span><br><span class="line">       <span class="attribute">expires</span>               -<span class="number">1</span>;</span><br><span class="line">       <span class="attribute">etag</span>                  <span class="literal">on</span>;</span><br><span class="line">       <span class="comment">#include              gzip_params;</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>重新起下服务试试<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  Windrunner git:(<span class="built_in">test</span>) nginx -s stop</span><br><span class="line">nginx: [alert] <span class="built_in">kill</span>(35357, 15) failed (3: No such process)</span><br><span class="line">➜  Windrunner git:(<span class="built_in">test</span>) nginx -c /Users/weiqian/Desktop/xxxxx/Windrunner/deploy/nginx.conf</span><br><span class="line">nginx: [warn] the <span class="string">"user"</span> directive makes sense only <span class="keyword">if</span> the master process runs with super-user privileges, ignored <span class="keyword">in</span> /Users/weiqian/Desktop/xxxxx/Windrunner/deploy/nginx.conf:1</span><br></pre></td></tr></table></figure></p>
+<p>也是ok的呢。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/nginx/" rel="tag"># nginx</a>
+              <a href="/tags/localhost/" rel="tag"># localhost</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/09/06/chrome-extension-jira-auto/" rel="prev" title="chrome-extension-jira-auto">
+      <i class="fa fa-chevron-left"></i> chrome-extension-jira-auto
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/09/09/Mac常用操作记录/" rel="next" title="Mac常用操作记录">
+      Mac常用操作记录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、nginx常用命令"><span class="nav-number">1.</span> <span class="nav-text">一、nginx常用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、更改的配置文件"><span class="nav-number">2.</span> <span class="nav-text">二、更改的配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、本地验证nginx配置是否正确"><span class="nav-number">3.</span> <span class="nav-text">三、本地验证nginx配置是否正确</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、线上访问验证"><span class="nav-number">4.</span> <span class="nav-text">四、线上访问验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、其他案例记录"><span class="nav-number">5.</span> <span class="nav-text">五、其他案例记录</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

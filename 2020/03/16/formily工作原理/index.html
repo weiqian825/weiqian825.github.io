@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="OutlineWhat is form How would you make a form Why formily Demo What is formform = validator + ui场景归纳：组件数据收集&amp;amp;校验&amp;amp;更新的流程是一致。 流程抽象：通过配置屏蔽组件间的差异性，对组件的配置规则统一管理。 常见form方案 youform (jsx 语法方式来声明表单 form">
+<meta property="og:type" content="article">
+<meta property="og:title" content="formily工作原理">
+<meta property="og:url" content="http://yoursite.com/2020/03/16/formily工作原理/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="OutlineWhat is form How would you make a form Why formily Demo What is formform = validator + ui场景归纳：组件数据收集&amp;amp;校验&amp;amp;更新的流程是一致。 流程抽象：通过配置屏蔽组件间的差异性，对组件的配置规则统一管理。 常见form方案 youform (jsx 语法方式来声明表单 form">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2020/03/16/images/ayouform.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/16/images/qqschemaform.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/16/images/mozschemaform.gif">
+<meta property="og:image" content="http://yoursite.com/2020/03/16/images/antformdemo.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/16/images/fromily-architecture.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/16/images/formcando.png">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="formily工作原理">
+<meta name="twitter:description" content="OutlineWhat is form How would you make a form Why formily Demo What is formform = validator + ui场景归纳：组件数据收集&amp;amp;校验&amp;amp;更新的流程是一致。 流程抽象：通过配置屏蔽组件间的差异性，对组件的配置规则统一管理。 常见form方案 youform (jsx 语法方式来声明表单 form">
+<meta name="twitter:image" content="http://yoursite.com/2020/03/16/images/ayouform.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/16/formily工作原理/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>formily工作原理 | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/16/formily工作原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          formily工作原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-16 21:16:30" itemprop="dateCreated datePublished" datetime="2020-03-16T21:16:30+00:00">2020-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h3><p>What is form</p>
+<p>How would you make a form</p>
+<p>Why formily</p>
+<p>Demo</p>
+<h3 id="What-is-form"><a href="#What-is-form" class="headerlink" title="What is form"></a>What is form</h3><h5 id="form-validator-ui"><a href="#form-validator-ui" class="headerlink" title="form = validator + ui"></a>form = validator + ui</h5><p>场景归纳：组件数据收集&amp;校验&amp;更新的流程是一致。</p>
+<p>流程抽象：通过配置屏蔽组件间的差异性，对组件的配置规则统一管理。</p>
+<p>常见form方案 youform (jsx 语法方式来声明表单 form + formItem) </p>
+<p><img src="../images/ayouform.png" alt="Alt text"></p>
+<p><img src="../images/qqschemaform.png" alt="Alt text"></p>
+<p>mozilla  jsonSchemaForm(通过 json 描述来构建表单，支持了配置化方式来构建表单)</p>
+<p> <a href="https://github.com/rjsf-team/react-jsonschema-form" target="_blank" rel="noopener">https://github.com/rjsf-team/react-jsonschema-form</a></p>
+<p><img src="../images/mozschemaform.gif" alt="Alt text"></p>
+<p>Antd Form </p>
+<p> <a href="https://github.com/ant-design/ant-design/tree/master/components/form" target="_blank" rel="noopener">https://github.com/ant-design/ant-design/tree/master/components/form</a> (antform)</p>
+<p><a href="https://github.com/react-component/form" target="_blank" rel="noopener">https://github.com/react-component/form</a> （rc-form 在antdV3.0及以下使用，antdV4用rc-field-form）</p>
+<p><img src="../images/antformdemo.png" alt=""></p>
+<p>redux-form作者finalform: <a href="https://github.com/final-form/final-form" target="_blank" rel="noopener">https://github.com/final-form/final-form</a></p>
+<p>Razzle作者、react领域目前star(21k )最多的form formik <a href="https://github.com/jaredpalmer/formik" target="_blank" rel="noopener">https://github.com/jaredpalmer/formik</a></p>
+<p>阿里内部的其他方案，例如alibaba/nopage(noform)作者鬼鼠也加入 ，集中做formily集团表单方案，外部核心成员于秋水（飞冰pm）</p>
+<p><img src="../images/fromily-architecture.png" alt=""></p>
+<p>阿里集团共建的表单领域型解决方案Formily</p>
+<p>内部的表单渲染从过去对React已知的单向数据流概念变成了点对点通讯模式</p>
+<h3 id="时间旅行能力"><a href="#时间旅行能力" class="headerlink" title="时间旅行能力"></a>时间旅行能力</h3><p>采用了Observable Graph的数据结构来管理整个表单的状态，使得表单任何状态都是可观察的，表单状态也是Immutable的</p>
+<p><a href="https://codesandbox.io/s/exciting-wing-n6xsu" target="_blank" rel="noopener">https://codesandbox.io/s/exciting-wing-n6xsu</a></p>
+<p><a href="https://codesandbox.io/s/smoosh-pine-uxv9n" target="_blank" rel="noopener">https://codesandbox.io/s/smoosh-pine-uxv9n</a></p>
+<p>分布式管理状态，点对点的主动更新字段状态，</p>
+<p>路径系统</p>
+<p>jQuery那种模式下，最强大的特性是啥？当然是选择器</p>
+<p>式层面，我们可以有css selector</p>
+<p>文件路径，我们都能有glob selector</p>
+<p>表单场景，它的核心就是一个dot path嘛 Selector DSL</p>
+<ul>
+<li><p>简单路径a.b.c.d, a.b.c.0.d, a.b[1]</p>
+</li>
+<li><p>批量路径 借鉴glob里面的*</p>
+</li>
+<li><p>分组路径*(aa,bb,cc)</p>
+</li>
+<li><p>排除选择！</p>
+<h3 id="解析器原理-cool-path"><a href="#解析器原理-cool-path" class="headerlink" title="解析器原理 cool-path"></a><strong>解析器原理</strong> cool-path</h3></li>
+</ul>
+<p>Parser，基于状态机+Tokenizer，生成AST Tree</p>
+<h3 id="路径管理模型"><a href="#路径管理模型" class="headerlink" title="路径管理模型"></a><strong>路径管理模型</strong></h3><ul>
+<li>解析路径</li>
+<li>匹配路径</li>
+<li>操作路径</li>
+<li>基于路径的取值，设值，批量取值，批量设值</li>
+</ul>
+<p>@<strong>uform/core</strong></p>
+<ul>
+<li>时间旅行能力支持，整体Form Tree State可观察，可回溯</li>
+<li>内置immer，精确更新，智能降级，无需关心浏览器版本</li>
+<li>更加完备的校验引擎</li>
+<li>悲观校验(validateFirst)能力</li>
+<li>warning校验</li>
+<li>手动批量或精确校验字段能力</li>
+<li>手动清除校验消息能力</li>
+<li>更加校验规则扩展机制</li>
+<li>增加正则规则扩展机制</li>
+<li>增加校验消息模板引擎定制能力</li>
+<li>更加完备的生命周期钩子</li>
+<li>更加完备的路径解析引擎</li>
+<li>解耦schema，更易扩展/二次开发(过去0.x的core是强耦合json schema的)</li>
+</ul>
+<p>@<strong>uform/react</strong></p>
+<ul>
+<li>包名变更，它只负责react组件的状态管理，无关json schema，若用户对UI定制需求高，则可直接使用该库进行开发</li>
+<li>同样的actions/effects，但带来的是更大的想象空间</li>
+</ul>
+<p>@<strong>uform/react-schema-renderer</strong></p>
+<ul>
+<li>包含了过去0.x的@uform/react几乎100%的能力，只有少部分API有变化</li>
+<li>升级表单协议，提供了更完备的json schema解析校验能力</li>
+<li>更高效方便的Form/FormItem样式定制能力</li>
+<li>提供了更加灵活的自定义组件开发方式，用来适配更复杂的业务场景</li>
+</ul>
+<p>@<strong>uform/antd or @uform/next</strong></p>
+<ul>
+<li><p>废除过去私有FormItem样式，全部继承组件库样式，所以不会再存在18px的空白占位符问题，同时也能支持对应组件库的主题样式定制能力</p>
+</li>
+<li><p>废除array组件的默认样式，统一采用cards样式，更加标准化，也能很好的适配组件库主题样式定制能力</p>
+</li>
+<li><p>array table内部的table组件采用了对应组件库的table，可以适配更加复杂的table定制需求</p>
+</li>
+<li><p>支持了FormStep布局组件，可以非常方便的处理分步表单场景</p>
+</li>
+</ul>
+<h5 id="或许formliy可以和这些有关系"><a href="#或许formliy可以和这些有关系" class="headerlink" title="或许formliy可以和这些有关系"></a>或许formliy可以和这些有关系</h5><p><img src="../images/formcando.png" alt="Alt text"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/12/包管理工具/" rel="prev" title="包管理工具">
+      <i class="fa fa-chevron-left"></i> 包管理工具
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/03/python测试小工具/" rel="next" title="python测试小工具">
+      python测试小工具 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Outline"><span class="nav-number">1.</span> <span class="nav-text">Outline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#What-is-form"><span class="nav-number">2.</span> <span class="nav-text">What is form</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#form-validator-ui"><span class="nav-number">2.0.1.</span> <span class="nav-text">form = validator + ui</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时间旅行能力"><span class="nav-number">3.</span> <span class="nav-text">时间旅行能力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解析器原理-cool-path"><span class="nav-number">4.</span> <span class="nav-text">解析器原理 cool-path</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#路径管理模型"><span class="nav-number">5.</span> <span class="nav-text">路径管理模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#或许formliy可以和这些有关系"><span class="nav-number">5.0.1.</span> <span class="nav-text">或许formliy可以和这些有关系</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

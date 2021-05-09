@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、相关资料我理解的i18n的原理就是字符串替换。根据语言拉取不同的json文件，再根据key做一个映射取到预期的结果。i18next官方文档react-i18next官方文档 二、i18next的基本API init 默认的的i18next模块是一个已经被init初始化后的i18next实例 1234567891011121314151617181920212223// i18next.init">
+<meta name="keywords" content="i18n">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react-i18next的应用及工作原理">
+<meta property="og:url" content="http://yoursite.com/2018/09/26/react-i18next的应用及工作原理/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="一、相关资料我理解的i18n的原理就是字符串替换。根据语言拉取不同的json文件，再根据key做一个映射取到预期的结果。i18next官方文档react-i18next官方文档 二、i18next的基本API init 默认的的i18next模块是一个已经被init初始化后的i18next实例 1234567891011121314151617181920212223// i18next.init">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.400Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="react-i18next的应用及工作原理">
+<meta name="twitter:description" content="一、相关资料我理解的i18n的原理就是字符串替换。根据语言拉取不同的json文件，再根据key做一个映射取到预期的结果。i18next官方文档react-i18next官方文档 二、i18next的基本API init 默认的的i18next模块是一个已经被init初始化后的i18next实例 1234567891011121314151617181920212223// i18next.init">
+
+<link rel="canonical" href="http://yoursite.com/2018/09/26/react-i18next的应用及工作原理/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>react-i18next的应用及工作原理 | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/26/react-i18next的应用及工作原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          react-i18next的应用及工作原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-09-26 10:37:57" itemprop="dateCreated datePublished" datetime="2018-09-26T10:37:57+00:00">2018-09-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/react/" itemprop="url" rel="index"><span itemprop="name">react</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一、相关资料"><a href="#一、相关资料" class="headerlink" title="一、相关资料"></a>一、相关资料</h3><p>我理解的i18n的原理就是字符串替换。根据语言拉取不同的json文件，再根据key做一个映射取到预期的结果。<br><a href="https://www.i18next.com/" target="_blank" rel="noopener">i18next官方文档</a><br><a href="https://react.i18next.com/" target="_blank" rel="noopener">react-i18next官方文档</a></p>
+<h3 id="二、i18next的基本API"><a href="#二、i18next的基本API" class="headerlink" title="二、i18next的基本API"></a>二、i18next的基本API</h3><ol>
+<li><p>init 默认的的i18next模块是一个已经被init初始化后的i18next实例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// i18next.init(option,callback) </span></span><br><span class="line"><span class="comment">// 具体的[option](https://www.i18next.com/overview/configuration-options)</span></span><br><span class="line"><span class="comment">// i18next instance</span></span><br><span class="line"><span class="keyword">const</span> resources = process.env.LANGUAGE.resources</span><br><span class="line"><span class="keyword">const</span> language = <span class="built_in">Object</span>.keys(resources)[<span class="number">0</span>]</span><br><span class="line">i18next</span><br><span class="line">  .init(&#123;</span><br><span class="line">    lng: language, <span class="comment">// language to use</span></span><br><span class="line">    fallbackLng: language, <span class="comment">// language to use if translations in user language are not available</span></span><br><span class="line">    defaultNS: <span class="string">'common'</span>,<span class="comment">// default namespace used if not passed to translation function​</span></span><br><span class="line">    keySeparator: <span class="literal">false</span>, <span class="comment">//char to separate keys</span></span><br><span class="line">    debug: process.env.NODE_ENV === <span class="string">'development'</span>,</span><br><span class="line">    resources, <span class="comment">// resources to initialize with (if not using loading or not appending using addResourceBundle)</span></span><br><span class="line">    interpolation: &#123;</span><br><span class="line">      escapeValue: <span class="literal">false</span></span><br><span class="line">    &#125;,</span><br><span class="line">    react: &#123;</span><br><span class="line">      wait: <span class="literal">true</span>,</span><br><span class="line">      bindI18n: <span class="string">'languageChanged loaded'</span>,<span class="comment">// which events trigger a rerender, can be set to false or string of events</span></span><br><span class="line">      bindStore: <span class="string">'added removed'</span>,<span class="comment">// which events on store trigger a rerender, can be set to false or string of events</span></span><br><span class="line">      nsMode: <span class="string">'default'</span> <span class="comment">// default: namespaces will be loaded an the first will be set as default or fallback: namespaces will be used as fallbacks used in order provided</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>t</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//i18next.t(keys,options)</span></span><br><span class="line"><span class="comment">//i18next.t('my.key') // will return value in set language</span></span><br><span class="line"><span class="keyword">const</span> firstLetterUpper = <span class="function">(<span class="params">str, allWords = <span class="literal">true</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> tmp = str.replace(<span class="regexp">/^(.)/g</span>, $<span class="number">1</span> =&gt; $<span class="number">1.</span>toUpperCase())</span><br><span class="line">  <span class="keyword">if</span> (allWords) &#123;</span><br><span class="line">    tmp = tmp.replace(<span class="regexp">/\s(.)/g</span>, $<span class="number">1</span> =&gt; $<span class="number">1.</span>toUpperCase())</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> tmp</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> tUpper = <span class="function">(<span class="params">str, allWords = <span class="literal">true</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> firstLetterUpper(i18next.t(str), allWords)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>changeLanguage 切换语言</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//i18next.changeLanguage(lng, callback)</span></span><br><span class="line">i18next.changeLanguage(<span class="string">'en'</span>, (err, t) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="keyword">return</span> <span class="built_in">console</span>.log(<span class="string">'something went wrong loading'</span>, err);</span><br><span class="line">  t(<span class="string">'key'</span>); <span class="comment">// -&gt; same as i18next.t</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> changeLanguage = <span class="function">(<span class="params">locale</span>) =&gt;</span> &#123;</span><br><span class="line">  i18next.changeLanguage(locale)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="三、react部分"><a href="#三、react部分" class="headerlink" title="三、react部分"></a>三、react部分</h3><ol>
+<li><p>引入react-i18next,用I18nextProvider将i18注入到componet(例子里面是App)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;I18nextProvider i18n=&#123;i18n&#125;&gt;</span><br><span class="line">    &lt;App /&gt;</span><br><span class="line">  &lt;/I18nextProvider&gt;,</span><br><span class="line">  document.querySelector(&apos;#root&apos;)</span><br><span class="line">)r</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在遇到需要国际化的地方调用translation即可{tUpper(‘xxx_key’)}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class App extends React.Component &#123;</span><br><span class="line">  render () &#123;</span><br><span class="line">    return &lt;h1&gt;&#123;tUpper(&apos;order_id&apos;)&#125;&lt;/h1&gt;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="四、本地翻译文件部分"><a href="#四、本地翻译文件部分" class="headerlink" title="四、本地翻译文件部分"></a>四、本地翻译文件部分</h3><p>上面部分展示了i18n是怎么工作的，在实际的项目中，我们会有很多的需要翻译的文件，如何工程化的组织和加载这些文件呢，我们的目录结构如下<br>i18n<br>├── index.js //自动拉取线上的翻译文件，避免手动导入。 script里面可以放脚本 node i18n/index.js 先执行这个，在执行正常工作目录<br>├── locales //翻译文件具体内容<br>│   ├── en.json<br>│   ├── id-ID.json<br>│   ├── ms-MY.json<br>│   ├── th-TH.json<br>│   ├── vi-VN.json<br>│   ├── zh-Hans.json<br>│   └── zh-Hant.json<br>├── localesHash.js //国家对应的语言hash<br>└── resourcesHash.js //语言对应的资源文件包</p>
+<h3 id="五、webpack加载配置"><a href="#五、webpack加载配置" class="headerlink" title="五、webpack加载配置"></a>五、webpack加载配置</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//国家对应的语言hash</span></span><br><span class="line"><span class="keyword">const</span> localesHash = <span class="built_in">require</span>(<span class="string">'./i18n/localesHash'</span>)</span><br><span class="line"><span class="comment">//语言对应资源hash</span></span><br><span class="line"><span class="keyword">const</span> resourcesHash = <span class="built_in">require</span>(<span class="string">'./i18n/resourcesHash'</span>)</span><br><span class="line"><span class="comment">//webpack.config.js</span></span><br><span class="line"><span class="keyword">const</span> config = <span class="function">(<span class="params">env = &#123;&#125;, argv</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> isProductionMode = argv.mode === <span class="string">'production'</span></span><br><span class="line">  <span class="keyword">const</span> country = (env.country || <span class="string">'en'</span>).toUpperCase()</span><br><span class="line">  <span class="keyword">const</span> locales = (localesHash[country] || []).concat([<span class="string">'en'</span>])</span><br><span class="line">  <span class="keyword">const</span> resources = locales.reduce(</span><br><span class="line">    (previous, current) =&gt; &#123;</span><br><span class="line">      previous[current] = &#123;</span><br><span class="line">        common: resourcesHash[current]</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> previous</span><br><span class="line">    &#125;, &#123;&#125;)</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    plugins: [</span><br><span class="line">      <span class="keyword">new</span> webpack.EnvironmentPlugin(&#123;</span><br><span class="line">        NODE_ENV: isProductionMode ? <span class="string">'production'</span> : <span class="string">'development'</span>,</span><br><span class="line">        SERVER_ENV: env.server || <span class="string">'test'</span>,</span><br><span class="line">        COUNTRY: country,</span><br><span class="line">        LANGUAGE: &#123;</span><br><span class="line">          resources</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="六、相应的package-json配置"><a href="#六、相应的package-json配置" class="headerlink" title="六、相应的package.json配置"></a>六、相应的package.json配置</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"debug:id"</span>: <span class="string">"webpack-dev-server  --progress  --env.country=id   --config  ./webpack.config.js"</span>,</span><br><span class="line">    <span class="attr">"debug:th"</span>: <span class="string">"webpack-dev-server  --progress   --env.country=th  --config  ./webpack.config.js"</span>,</span><br><span class="line">    <span class="attr">"start"</span>: <span class="string">"webpack-dev-server --mode  development  --config  ./webpack.config.js"</span>,</span><br><span class="line">    <span class="attr">"i18n"</span>: <span class="string">"node i18n/index.js"</span>,</span><br><span class="line">    <span class="attr">"build"</span>: <span class="string">"webpack --config  ./webpack.config.js"</span>,</span><br><span class="line">    <span class="attr">"test"</span>: <span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="七、问题记录"><a href="#七、问题记录" class="headerlink" title="七、问题记录"></a>七、问题记录</h3><ol>
+<li>每次正常启动访问<a href="http://localhost:9000之后总是自动跳到http://localhost:9000/auth/login，看了代码里面并没有任何关于权限的跳转逻辑，怀疑是本机ngnix或者别的程序影响的" target="_blank" rel="noopener">http://localhost:9000之后总是自动跳到http://localhost:9000/auth/login，看了代码里面并没有任何关于权限的跳转逻辑，怀疑是本机ngnix或者别的程序影响的</a><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">➜  init-i18n git:(master) ✗ lsof -i :9000</span><br><span class="line">COMMAND   PID    USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME</span><br><span class="line">com.docke 655 weiqian   18u  IPv4 0x673df5045a8519a5      0t0  TCP *:cslistener (LISTEN)</span><br><span class="line">com.docke 655 weiqian   19u  IPv6 0x673df5045531595d      0t0  TCP localhost:cslistener (LISTEN)</span><br><span class="line">➜  init-i18n git:(master) ✗ <span class="built_in">kill</span> -9 655</span><br><span class="line">➜  init-i18n git:(master) ✗ lsof -i :9000</span><br><span class="line">➜  init-i18n git:(master) ✗ npm run start</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>果然，docker的进程影响到，在重启世界和平。</p>
+<ol start="2">
+<li><p>刚开始怎么写代码都只能翻译英语的，智商捉鸡，orz</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//有bug的代码</span></span><br><span class="line"><span class="comment">//webpack.config.js里面</span></span><br><span class="line"><span class="keyword">const</span> country = (env.country || <span class="string">'en'</span>).toUpperCase()</span><br><span class="line"><span class="keyword">const</span> locales = [<span class="string">'en'</span>].concat(localesHash[country]) <span class="comment">// wrong</span></span><br><span class="line"><span class="comment">// const locales = (localesHash[country] || []).concat(['en']) // right</span></span><br><span class="line"><span class="keyword">const</span> resources = locales.reduce(</span><br><span class="line">    (previous, current) =&gt; &#123;</span><br><span class="line">        previous[current] = &#123;</span><br><span class="line">        common: resourcesHash[current]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> previous</span><br><span class="line">    &#125;, &#123;&#125;)</span><br><span class="line"><span class="comment">//i18n里面选择的</span></span><br><span class="line"><span class="keyword">const</span> resources = process.env.LANGUAGE.resources</span><br><span class="line"><span class="comment">//这里选择默认选择的是第一个，所以webpack里面的resource顺序就很重要</span></span><br><span class="line"><span class="keyword">const</span> language = <span class="built_in">Object</span>.keys(resources)[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<p>错误地方好弱智</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> locales = [<span class="string">'en'</span>].concat(localesHash[country])</span><br><span class="line"><span class="comment">// locales的第一个永远是en那么选择策略 Object.keys(resources)[0] 永远都选第一个</span></span><br><span class="line"><span class="comment">//改正到正确代码</span></span><br><span class="line"><span class="keyword">const</span> locales = (localesHash[country] || []).concat([<span class="string">'en'</span>])</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/i18n/" rel="tag"># i18n</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/09/21/webpack解决跨越问题/" rel="prev" title="webpack解决跨越问题">
+      <i class="fa fa-chevron-left"></i> webpack解决跨越问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/10/09/linux常用基础操作/" rel="next" title="linux常用基础操作">
+      linux常用基础操作 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、相关资料"><span class="nav-number">1.</span> <span class="nav-text">一、相关资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、i18next的基本API"><span class="nav-number">2.</span> <span class="nav-text">二、i18next的基本API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、react部分"><span class="nav-number">3.</span> <span class="nav-text">三、react部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、本地翻译文件部分"><span class="nav-number">4.</span> <span class="nav-text">四、本地翻译文件部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、webpack加载配置"><span class="nav-number">5.</span> <span class="nav-text">五、webpack加载配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、相应的package-json配置"><span class="nav-number">6.</span> <span class="nav-text">六、相应的package.json配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、问题记录"><span class="nav-number">7.</span> <span class="nav-text">七、问题记录</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

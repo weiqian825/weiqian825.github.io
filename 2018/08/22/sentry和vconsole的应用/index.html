@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、关于sentrysentry业界最流行监控的开源框架，可以说是很多公司的监控系统的基础平台之一。sentry本地搭建可以自己试试哈，公司有自建的站点我们项目使用的react框架，接入方式查阅官方文档即可。12import Raven from &apos;raven-js&apos;Raven.config(&apos;https://&amp;lt;key&amp;gt;@sentry.io/&amp;lt;project&amp;gt;&apos;).inst">
+<meta name="keywords" content="sentry,vconsole">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sentry和vconsole的应用 ">
+<meta property="og:url" content="http://yoursite.com/2018/08/22/sentry和vconsole的应用/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="一、关于sentrysentry业界最流行监控的开源框架，可以说是很多公司的监控系统的基础平台之一。sentry本地搭建可以自己试试哈，公司有自建的站点我们项目使用的react框架，接入方式查阅官方文档即可。12import Raven from &apos;raven-js&apos;Raven.config(&apos;https://&amp;lt;key&amp;gt;@sentry.io/&amp;lt;project&amp;gt;&apos;).inst">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.400Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sentry和vconsole的应用 ">
+<meta name="twitter:description" content="一、关于sentrysentry业界最流行监控的开源框架，可以说是很多公司的监控系统的基础平台之一。sentry本地搭建可以自己试试哈，公司有自建的站点我们项目使用的react框架，接入方式查阅官方文档即可。12import Raven from &apos;raven-js&apos;Raven.config(&apos;https://&amp;lt;key&amp;gt;@sentry.io/&amp;lt;project&amp;gt;&apos;).inst">
+
+<link rel="canonical" href="http://yoursite.com/2018/08/22/sentry和vconsole的应用/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>sentry和vconsole的应用  | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/22/sentry和vconsole的应用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          sentry和vconsole的应用 
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-08-22 19:27:28" itemprop="dateCreated datePublished" datetime="2018-08-22T19:27:28+00:00">2018-08-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web/" itemprop="url" rel="index"><span itemprop="name">web</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一、关于sentry"><a href="#一、关于sentry" class="headerlink" title="一、关于sentry"></a>一、关于sentry</h3><p><a href="https://sentry.io/welcome/" target="_blank" rel="noopener">sentry</a>业界最流行监控的开源框架，可以说是很多公司的监控系统的基础平台之一。<a href="https://juejin.im/post/5b226cbe51882574d02f9f62" target="_blank" rel="noopener">sentry本地搭建</a>可以自己试试哈，公司有自建的<a href="https://sentry.xxxxxmobile.com/sentry/" target="_blank" rel="noopener">站点</a>我们项目使用的react框架，接入方式查阅<a href="https://docs.sentry.io/clients/javascript/integrations/react/" target="_blank" rel="noopener">官方文档</a>即可。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Raven <span class="keyword">from</span> <span class="string">'raven-js'</span></span><br><span class="line">Raven.config(<span class="string">'https://&lt;key&gt;@sentry.io/&lt;project&gt;'</span>).install()</span><br></pre></td></tr></table></figure></p>
+<h3 id="二、关于vconsole"><a href="#二、关于vconsole" class="headerlink" title="二、关于vconsole"></a>二、关于vconsole</h3><p><a href="https://github.com/Tencent/vConsole" target="_blank" rel="noopener">vconsole</a>是微信前端团队出的一款可以在移动端打印log的工具，我们用户在不同的几个国家，开发面临无法复现用户的网络环境，接入vconsole应该会帮助我们解决一部分定位问题的困难，所以接入试试效果，后期看看效果。</p>
+<h3 id="三、接入vconsole"><a href="#三、接入vconsole" class="headerlink" title="三、接入vconsole"></a>三、接入vconsole</h3><p>方法一: 引入<a href="https://github.com/diamont1001/vconsole-webpack-plugin" target="_blank" rel="noopener">vconsole-webpack-plugin</a><br>问题：我们想要线上带有特定参数的链接出console控制面板，这个只能区分不同的部署环境例如test、uat、live等等，无法做到在一个环境里表现不一样，webpack动态加载打包内容是在用户访问前就已经确认的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引入插件</span></span><br><span class="line"><span class="keyword">var</span> vConsolePlugin = <span class="built_in">require</span>(<span class="string">'vconsole-webpack-plugin'</span>); </span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    plugins: [</span><br><span class="line">        <span class="keyword">new</span> vConsolePlugin(&#123;</span><br><span class="line">            filter: [],  <span class="comment">// 需要过滤的入口文件</span></span><br><span class="line">            enable: <span class="literal">true</span> <span class="comment">// 发布代码前记得改回 false</span></span><br><span class="line">        &#125;)</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>方法二: 在public的index.html文件里根据url不一样动态的插入script标签，引入vconsole的js库<br>问题: 是可行的，只不过总觉得不是react项目的正常写法，不优雅怪怪的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// url里面带有特定参数时候，动态插入js库，js库也在public里面放着</span></span><br><span class="line">&lt;script type=<span class="string">"text/javascript"</span> src=<span class="string">"./vconsole.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>方法三: 用import在需要的时候引入vconsole的代码库</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在满足条件的时候</span></span><br><span class="line"><span class="keyword">import</span>(<span class="string">'./vconsole.js'</span>).then(<span class="function">(<span class="params">VConsole</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> vconsole = <span class="keyword">new</span> VConsole()</span><br><span class="line">    <span class="built_in">console</span>.log(vconsole)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="四、vconsole问题"><a href="#四、vconsole问题" class="headerlink" title="四、vconsole问题"></a>四、vconsole问题</h3><ol>
+<li><p>代码编译不过，报错变量没找到，猜想语法检查没通过，于是各种改package.json里面的standard设置，如下</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">"standard": &#123;</span><br><span class="line">  "parser": "babel-eslint",</span><br><span class="line">  "globals": [</span><br><span class="line">    "it",</span><br><span class="line">    <span class="string">"VConsole"</span></span><br><span class="line">  ],</span><br><span class="line">  "ignore": [</span><br><span class="line">    "**/vendor/**/*.js",</span><br><span class="line">    "**/*.test.js",</span><br><span class="line">    <span class="string">"**/src/*.js"</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>依旧不对，是不是编译引入的js文件不正确，各种引入不同的js包。</p>
+</li>
+<li>依旧不对，终于在一次尝试引入了modules下面的包import(‘vconsole’)编译通过了，于是我们猜想是方向不对，应该是create-my-app在编译的过程中做了某种<a href="https://stackoverflow.com/questions/50672331/failed-to-compile-create-react-app-due-to-lint-warnings-after-ejecting" target="_blank" rel="noopener">语法检查</a></li>
+<li><p>检查webpack.config.base.js果然发现如下代码</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">      test: /\.(js|jsx|mjs)$/,</span><br><span class="line">      enforce: 'pre',</span><br><span class="line">      use: [</span><br><span class="line">        &#123;</span><br><span class="line">          options: &#123;</span><br><span class="line">            formatter: eslintFormatter,</span><br><span class="line">            eslintPath: require.resolve('eslint')</span><br><span class="line"></span><br><span class="line">          &#125;,</span><br><span class="line">          loader: require.resolve('eslint-loader')</span><br><span class="line">        &#125;</span><br><span class="line">      ],</span><br><span class="line">      include: paths.appSrc</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+<p>改正后</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// include: paths.appSrc,</span></span><br><span class="line">exclude: [<span class="regexp">/vconsole.js/</span>]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>语法的报错果然没有了，完美。</p>
+</li>
+<li>打开体验的时候，发现network竟然没有抓到包，issue里面也没有提到这个问题，简单测试后，发现ajax可以抓到，我们的项目里面使用的是window.fetch竟然没有支持。</li>
+<li>额，看看怎么改下他们的代码吧。。。。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/sentry/" rel="tag"># sentry</a>
+              <a href="/tags/vconsole/" rel="tag"># vconsole</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/08/16/fe-badjs-project/" rel="prev" title="fe-badjs-project">
+      <i class="fa fa-chevron-left"></i> fe-badjs-project
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/08/24/让vconsole支持fetch/" rel="next" title="让vconsole支持fetch">
+      让vconsole支持fetch <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、关于sentry"><span class="nav-number">1.</span> <span class="nav-text">一、关于sentry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、关于vconsole"><span class="nav-number">2.</span> <span class="nav-text">二、关于vconsole</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、接入vconsole"><span class="nav-number">3.</span> <span class="nav-text">三、接入vconsole</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、vconsole问题"><span class="nav-number">4.</span> <span class="nav-text">四、vconsole问题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

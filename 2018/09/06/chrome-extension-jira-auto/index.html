@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="乞丐版的GUI可以抓取jira，生成本地的csv，我们希望这个东西能直接写到chrome drive里面去，每个人安装一个exe，是有些大材小用了。于是开始重新规划搞一个goole插件，负责抓取数据和写入drive。源码 一、 jira的数据处理 jira官网有相关接口文档，我们自己的jira平台也可抓取请求包。demo测试下插件的demo我们参考了一些简单的教程和书籍资料123456789101">
+<meta name="keywords" content="chrome-extension,jira">
+<meta property="og:type" content="article">
+<meta property="og:title" content="chrome-extension-jira-auto">
+<meta property="og:url" content="http://yoursite.com/2018/09/06/chrome-extension-jira-auto/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="乞丐版的GUI可以抓取jira，生成本地的csv，我们希望这个东西能直接写到chrome drive里面去，每个人安装一个exe，是有些大材小用了。于是开始重新规划搞一个goole插件，负责抓取数据和写入drive。源码 一、 jira的数据处理 jira官网有相关接口文档，我们自己的jira平台也可抓取请求包。demo测试下插件的demo我们参考了一些简单的教程和书籍资料123456789101">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="chrome-extension-jira-auto">
+<meta name="twitter:description" content="乞丐版的GUI可以抓取jira，生成本地的csv，我们希望这个东西能直接写到chrome drive里面去，每个人安装一个exe，是有些大材小用了。于是开始重新规划搞一个goole插件，负责抓取数据和写入drive。源码 一、 jira的数据处理 jira官网有相关接口文档，我们自己的jira平台也可抓取请求包。demo测试下插件的demo我们参考了一些简单的教程和书籍资料123456789101">
+
+<link rel="canonical" href="http://yoursite.com/2018/09/06/chrome-extension-jira-auto/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>chrome-extension-jira-auto | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/06/chrome-extension-jira-auto/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          chrome-extension-jira-auto
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-09-06 16:38:11" itemprop="dateCreated datePublished" datetime="2018-09-06T16:38:11+00:00">2018-09-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web/" itemprop="url" rel="index"><span itemprop="name">web</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a href="https://weiqian93.github.io/2018/08/30/electron%E5%81%9Ago%E7%88%AC%E8%99%AB%E7%9A%84gui/" target="_blank" rel="noopener">乞丐版的GUI</a>可以抓取jira，生成本地的csv，我们希望这个东西能直接写到chrome drive里面去，每个人安装一个exe，是有些大材小用了。于是开始重新规划搞一个<a href="https://developer.chrome.com/extensions" target="_blank" rel="noopener">goole插件</a>，负责抓取数据和写入drive。<a href="https://github.com/weiqian93/jira-auto/tree/chrome-extension-demo" target="_blank" rel="noopener">源码</a></p>
+<h3 id="一、-jira的数据处理"><a href="#一、-jira的数据处理" class="headerlink" title="一、 jira的数据处理"></a>一、 jira的数据处理</h3><ol>
+<li><a href="https://developer.atlassian.com/cloud/jira/platform/" target="_blank" rel="noopener">jira官网</a>有相关接口文档，我们自己的jira平台也可抓取请求包。demo测试下<br>插件的demo我们参考了一些<a href="https://github.com/welearnmore/chrome-extension-book" target="_blank" rel="noopener">简单的教程</a>和<a href="http://www.ituring.com.cn/book/1421" target="_blank" rel="noopener">书籍资料</a><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//manifest.json</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"0.0.1"</span>,</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"jira-demo"</span>,</span><br><span class="line">  <span class="attr">"manifest_version"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">"description"</span>: <span class="string">"jira-demo"</span>,</span><br><span class="line">  <span class="attr">"browser_action"</span>: &#123;</span><br><span class="line">    <span class="attr">"default_title"</span>: <span class="string">"jira-demo"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"content_scripts"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"matches"</span>: [<span class="string">"https://jira.garenanow.com/*"</span>],</span><br><span class="line">      <span class="attr">"js"</span>: [<span class="string">"content_scripts.js"</span>]</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"permissions"</span>: [</span><br><span class="line">    <span class="string">"cookies"</span>, </span><br><span class="line">    <span class="string">"&lt;all_urls&gt;"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"content_security_policy"</span>: <span class="string">"script-src 'self' 'unsafe-eval'; object-src 'self';"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// content_scripts.js</span></span><br><span class="line"><span class="keyword">var</span> searchUrl = <span class="string">'https://jira.garenanow.com/rest/api/2/search'</span></span><br><span class="line"><span class="built_in">window</span>.fetch(searchUrl)</span><br><span class="line">    .then(<span class="function"><span class="keyword">function</span> (<span class="params">response</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (response.status === <span class="number">200</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> response.json()</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> ([<span class="number">400</span>, <span class="number">401</span>].indexOf(response.status) &gt; <span class="number">-1</span>) &#123;</span><br><span class="line">        <span class="built_in">window</span>.alert(<span class="string">'您还没登陆jira呦～去登陆'</span>)</span><br><span class="line">        <span class="built_in">window</span>.chrome.tabs.create(&#123; <span class="attr">url</span>: <span class="string">'https://jira.garenanow.com/secure/Dashboard.jspa'</span> &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    .then(<span class="function"><span class="keyword">function</span>(<span class="params">myJson</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(myJson)</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+<p>测试ok，根据jql语法完善下查询条件，demo测试ok，预言这部分完全可以替代go爬虫，更简单一些<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var searchUrl = `https://jira.garenanow.com/rest/api/2/search?jql=</span><br><span class="line">                project IN ("SPDGT", "Test")</span><br><span class="line">            AND issuetype IN ("Task", "Sub-task")</span><br><span class="line">            AND resolution IN ("Unresolved", "Done")</span><br><span class="line">            AND component IN ("FE","BE")</span><br><span class="line">            AND status IN ("To <span class="keyword">Do</span><span class="string">", "</span><span class="keyword">In</span> Progress<span class="string">", "</span>Closed<span class="string">")</span></span><br><span class="line"><span class="string">            AND assignee IN ("</span>qian.wei@xxxxx.com<span class="string">")`</span></span><br></pre></td></tr></table></figure></p>
+<p>这里有一个遗留的问题，就是jira的登陆态问题，刚开始猜想是否可以直接从插件部分输入一次用户的密码和账户，测试发现同样的请求接口，cookie里面的succLogin一直返回false，并且缺少了正常登陆态cookie里面的sessionid，估计这里平台这里做了一些登陆的处理，所以我们登陆模块暂时处理为，引导用户登陆jira，然后再通过插件正常查询jira里面的数据，体验上也不会有太大问题。</p>
+<h3 id="二、-写入chrome-drive文档"><a href="#二、-写入chrome-drive文档" class="headerlink" title="二、 写入chrome drive文档"></a>二、 写入chrome drive文档</h3><p><a href="https://developers.google.com/sheets/api/guides/values" target="_blank" rel="noopener">谷歌开发者文档</a>里面支持多种开发方式，在快速引导里面分别体验了 browser、google apps script、node.js及python，发现一些问题，貌似并不能和插件有些不一样，插件是纯css html的静态脚本，文档里的例子显然相对复杂。</p>
+<ol>
+<li>google apps script类似在谷歌文档里面保存里一段script，需要生成一些模版选择从文档页面插入，有点类似编代码时候快捷键快速生成代码。</li>
+<li>node也起了一个服务，起了一个服务端资源，我们的初衷希望是一个纯插件，并不想引入服务端的概念，尽可能简单。</li>
+<li>browser和python方法类似，问题同2。中间尝试是否可以用python写代码编译成一个纯插件，后来并没有开始做因为我们找到了看起来更简单的方法，即4。</li>
+<li><p>ayou在翻阅chrome sheets文档测试时候，发现插件可以调用，如下。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">// manifest.json</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"version"</span>: <span class="string">"0.0.1"</span>,</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"sheets-demo"</span>,</span><br><span class="line">    <span class="attr">"manifest_version"</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="attr">"description"</span>: <span class="string">"sheets-demo"</span>,</span><br><span class="line">    <span class="attr">"browser_action"</span>: &#123;</span><br><span class="line">      <span class="attr">"default_title"</span>: <span class="string">"sheets-demo"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"background"</span>: &#123;</span><br><span class="line">      <span class="attr">"page"</span>: <span class="string">"background.html"</span>,</span><br><span class="line">      <span class="attr">"persistent"</span>: <span class="literal">false</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"permissions"</span>: [</span><br><span class="line">      <span class="string">"cookies"</span>,</span><br><span class="line">      <span class="string">"&lt;all_urls&gt;"</span>,</span><br><span class="line">      <span class="string">"background"</span>,</span><br><span class="line">      <span class="string">"identity"</span>,</span><br><span class="line">      <span class="string">"notifications"</span>,</span><br><span class="line">      <span class="string">"storage"</span>,</span><br><span class="line">      <span class="string">"alarms"</span>,</span><br><span class="line">      <span class="string">"https://spreadsheets.google.com/"</span>,</span><br><span class="line">      <span class="string">"https://docs.google.com/"</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"oauth2"</span>: &#123;</span><br><span class="line">      <span class="attr">"client_id"</span>: <span class="string">"624254244178-9f527anv43dhfs5ghii10bdgo2jbii3e.apps.googleusercontent.com"</span>,</span><br><span class="line">      <span class="attr">"scopes"</span>: [</span><br><span class="line">        <span class="string">"https://spreadsheets.google.com/feeds"</span>,</span><br><span class="line">        <span class="string">"https://docs.google.com/feeds"</span>,</span><br><span class="line">        <span class="string">"https://www.googleapis.com/auth/plus.login"</span>,</span><br><span class="line">        <span class="string">"https://www.googleapis.com/auth/drive"</span>,</span><br><span class="line">        <span class="string">"https://www.googleapis.com/auth/spreadsheets"</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// background.html</span><br><span class="line">&lt;script type=&quot;module&quot; src=&quot;background.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//background.js</span><br><span class="line">import GSheet from &apos;./gsheet.js&apos;</span><br><span class="line">const gSheet = new GSheet()</span><br><span class="line">var  data = [[&apos;title1&apos;,&apos;title2&apos;],[11,12],[21,22]]</span><br><span class="line">generateSheet(data)</span><br><span class="line">async function generateSheet (data) &#123;</span><br><span class="line">  await gSheet.getAuthToken()</span><br><span class="line">  const res = await gSheet.createSheet(&#123;</span><br><span class="line">    &apos;properties&apos;: &#123;</span><br><span class="line">        title:&apos;test-demo&apos;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  const &#123; spreadsheetId &#125; = res</span><br><span class="line">  await gSheet.writeToSheet(&#123;</span><br><span class="line">    spreadsheetId,</span><br><span class="line">    range: &apos;Sheet1!A1:A&apos;,</span><br><span class="line">    values: data</span><br><span class="line">  &#125;)</span><br><span class="line">  window.chrome.tabs.create(&#123; url: &apos;https://drive.google.com/drive/u/0/my-drive&apos; &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//gsheet.js</span></span><br><span class="line"><span class="keyword">const</span> identity = <span class="built_in">window</span>.chrome.identity</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">GSheet</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span> () &#123;</span><br><span class="line">    <span class="keyword">this</span>._token = <span class="string">''</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  _fetch (&#123;</span><br><span class="line">    url,</span><br><span class="line">    method = <span class="string">'GET'</span>,</span><br><span class="line">    body</span><br><span class="line">  &#125;) &#123;</span><br><span class="line">    url = <span class="string">'https://content-sheets.googleapis.com/v4/spreadsheets'</span> + url</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> params = &#123;</span><br><span class="line">      method,</span><br><span class="line">      headers: &#123;</span><br><span class="line">        <span class="string">'Authorization'</span>: <span class="string">'Bearer '</span> + <span class="keyword">this</span>._token,</span><br><span class="line">        <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (body) &#123;</span><br><span class="line">      params.body = <span class="built_in">JSON</span>.stringify(body)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> status = <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">window</span>.fetch(url, params)</span><br><span class="line">        .then(<span class="function"><span class="params">rsp</span> =&gt;</span> &#123;</span><br><span class="line">          status = rsp.status</span><br><span class="line">          <span class="keyword">switch</span> (status) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">200</span>:</span><br><span class="line">              <span class="keyword">return</span> rsp.json()</span><br><span class="line">            <span class="keyword">case</span> <span class="number">204</span>:</span><br><span class="line">              <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">            <span class="keyword">case</span> <span class="number">500</span>:</span><br><span class="line">              <span class="keyword">return</span> &#123;</span><br><span class="line">                message: <span class="string">'Internal server error.'</span></span><br><span class="line">              &#125;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">              <span class="keyword">return</span> &#123;</span><br><span class="line">                message: rsp.statusText</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .then(<span class="function"><span class="params">body</span> =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (status === <span class="number">200</span>) &#123;</span><br><span class="line">            resolve(body)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  getAuthToken () &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      identity.getAuthToken(&#123;</span><br><span class="line">        <span class="string">'interactive'</span>: <span class="literal">true</span></span><br><span class="line">      &#125;, token =&gt; &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(token,token)</span><br><span class="line">        identity.removeCachedAuthToken(&#123; token &#125;, () =&gt; &#123;</span><br><span class="line">          identity.getAuthToken(&#123;</span><br><span class="line">            <span class="string">'interactive'</span>: <span class="literal">true</span></span><br><span class="line">          &#125;, token =&gt; &#123;</span><br><span class="line">            <span class="keyword">this</span>._token = token</span><br><span class="line">            resolve()</span><br><span class="line">          &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  writeToSheet (&#123;</span><br><span class="line">    spreadsheetId,</span><br><span class="line">    range,</span><br><span class="line">    values</span><br><span class="line">  &#125;) &#123;</span><br><span class="line">    <span class="keyword">const</span> url = <span class="string">`/<span class="subst">$&#123;spreadsheetId&#125;</span>/values/<span class="subst">$&#123;<span class="built_in">encodeURIComponent</span>(range)&#125;</span>:append?insertDataOption=OVERWRITE&amp;valueInputOption=RAW&amp;alt=json`</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>._fetch(&#123;</span><br><span class="line">      url,</span><br><span class="line">      method: <span class="string">'POST'</span>,</span><br><span class="line">      body: &#123;</span><br><span class="line">        range,</span><br><span class="line">        values,</span><br><span class="line">        <span class="string">'majorDimension'</span>: <span class="string">'ROWS'</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  createSheet (params) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>._fetch(&#123;</span><br><span class="line">      url: <span class="string">'/'</span>,</span><br><span class="line">      method: <span class="string">'POST'</span>,</span><br><span class="line">      body: params</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>background.js代码稍微有点多，我们简单的模块化下，引入<a href="https://medium.com/front-end-hacking/es6-modules-in-chrome-extensions-an-introduction-313b3fce955b" target="_blank" rel="noopener">es6-modules-in-chrome-extensions</a></p>
+<h3 id="三、合并抓取数据和写入drive"><a href="#三、合并抓取数据和写入drive" class="headerlink" title="三、合并抓取数据和写入drive"></a>三、合并抓取数据和写入drive</h3><p><a href="https://github.com/weiqian93/jira-auto/tree/chrome-extension-demo" target="_blank" rel="noopener">源码</a>，再试用的时候发现问题，永远写入了一个人的账户，不管谁操作，猜想是client_id的问题，每个用户是否都在本地有唯一的授权id，毕竟操作google doc也算是比较敏感操作。测试后发现的确是这样，manifest.json里面oauth2部分的client_id是专属的，每个安装插件的人都需要申请google权限并且在manifest.json里面设置自己的专属client_id</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">"oauth2": &#123;</span><br><span class="line">  "client_id": "624254244178-9f527anv43dhfs5ghii10bdgo2jbii3e.apps.googleusercontent.com",</span><br><span class="line">  "scopes": [</span><br><span class="line">    "https://spreadsheets.google.com/feeds",</span><br><span class="line">    "https://docs.google.com/feeds",</span><br><span class="line">    "https://www.googleapis.com/auth/plus.login",</span><br><span class="line">    "https://www.googleapis.com/auth/drive",</span><br><span class="line">    <span class="string">"https://www.googleapis.com/auth/spreadsheets"</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="四、配置google权限"><a href="#四、配置google权限" class="headerlink" title="四、配置google权限"></a>四、配置google权限</h3><ol>
+<li>获取插件<a href="https://github.com/weiqian93/jira-auto/tree/chrome-extension-demo" target="_blank" rel="noopener">代码</a></li>
+<li>获取插件 id<br> 打开<a href="chrome://extensions/" target="_blank" rel="noopener">chrome插件</a><br> 点击加载已解压的拓展程序，选择jira_auto整个目录，得到插件的id</li>
+<li>添加 google sheet api 库<br>打开<a href="https://console.developers.google.com/" target="_blank" rel="noopener">Dashboard</a><br>输入 google sheet api =&gt; MANAGE</li>
+<li>修改 client id<br> 打开<a href="https://console.developers.google.com/apis/credentials" target="_blank" rel="noopener">credentials</a><br> Credentials =&gt; Create Credentials =&gt; oAuth Client Id =&gt; Chrome App<br> 将第一步得到的 id 复制到 Application ID 一栏，点击创建得到 client ID</li>
+<li>将得到的 client id 拷贝下来覆盖掉项目下 manifest.json 中的 client_id 字段，然后刷新插件，接着就可以愉快的使用了。</li>
+</ol>
+<h3 id="五、小结"><a href="#五、小结" class="headerlink" title="五、小结"></a>五、小结</h3><p>这里的实现比乞丐版的gui的开发代码是简单了许多，不过写chrome drive的操作真的比较繁琐了，权衡下是否可以考虑在插件里做更加丰富的查询生成比较好的本地模版内容，然后复制到google drive里面，更优呢？</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/chrome-extension/" rel="tag"># chrome-extension</a>
+              <a href="/tags/jira/" rel="tag"># jira</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/08/30/electron做go爬虫的gui/" rel="prev" title="electron做go爬虫的gui">
+      <i class="fa fa-chevron-left"></i> electron做go爬虫的gui
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/09/07/nginx-本地部署及问题/" rel="next" title="nginx 本地部署及问题">
+      nginx 本地部署及问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、-jira的数据处理"><span class="nav-number">1.</span> <span class="nav-text">一、 jira的数据处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、-写入chrome-drive文档"><span class="nav-number">2.</span> <span class="nav-text">二、 写入chrome drive文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、合并抓取数据和写入drive"><span class="nav-number">3.</span> <span class="nav-text">三、合并抓取数据和写入drive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、配置google权限"><span class="nav-number">4.</span> <span class="nav-text">四、配置google权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、小结"><span class="nav-number">5.</span> <span class="nav-text">五、小结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

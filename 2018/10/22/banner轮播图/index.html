@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、banner ui部分 UI部分BannerItem和BannerDots banerItem.js 12345678910111213141516171819202122232425262728293031import React, &amp;#123; Component &amp;#125; from &amp;apos;react&amp;apos;import classNames from &amp;apos;class">
+<meta name="keywords" content="banner,componets">
+<meta property="og:type" content="article">
+<meta property="og:title" content="banner轮播图">
+<meta property="og:url" content="http://yoursite.com/2018/10/22/banner轮播图/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="一、banner ui部分 UI部分BannerItem和BannerDots banerItem.js 12345678910111213141516171819202122232425262728293031import React, &amp;#123; Component &amp;#125; from &amp;apos;react&amp;apos;import classNames from &amp;apos;class">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="banner轮播图">
+<meta name="twitter:description" content="一、banner ui部分 UI部分BannerItem和BannerDots banerItem.js 12345678910111213141516171819202122232425262728293031import React, &amp;#123; Component &amp;#125; from &amp;apos;react&amp;apos;import classNames from &amp;apos;class">
+
+<link rel="canonical" href="http://yoursite.com/2018/10/22/banner轮播图/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>banner轮播图 | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/22/banner轮播图/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          banner轮播图
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-10-22 22:01:15" itemprop="dateCreated datePublished" datetime="2018-10-22T22:01:15+00:00">2018-10-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/xxxxx/" itemprop="url" rel="index"><span itemprop="name">xxxxx</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一、banner-ui部分"><a href="#一、banner-ui部分" class="headerlink" title="一、banner ui部分"></a>一、banner ui部分</h3><ol>
+<li><p>UI部分BannerItem和BannerDots banerItem.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123; Component &#125; from &apos;react&apos;</span><br><span class="line">import classNames from &apos;classnames&apos;</span><br><span class="line">import style from &apos;./style.scss&apos;</span><br><span class="line"></span><br><span class="line">export const BannerItem = (&#123; count, item &#125;) =&gt; (</span><br><span class="line">  &lt;li className=&#123;style.bannerItem&#125; style=&#123;&#123; width: (100 / count + &apos;%&apos;) &#125;&#125;&gt;</span><br><span class="line">    &lt;a href=&#123;item.link || &apos;javascript:;&apos;&#125;&gt; &lt;img src=&#123;item.src&#125; alt=&#123;item.alt || &apos;&apos;&#125; /&gt;&lt;/a&gt;</span><br><span class="line">  &lt;/li&gt;</span><br><span class="line">)</span><br><span class="line">export class BannerDots extends Component &#123;</span><br><span class="line">  render () &#123;</span><br><span class="line">    const &#123; count, curIndex &#125; = this.props</span><br><span class="line">    let dotNodes = []</span><br><span class="line">    for (let i = 0; i &lt; count; i++) &#123;</span><br><span class="line">      dotNodes[i] = (</span><br><span class="line">        &lt;span</span><br><span class="line">          key=&#123;i&#125;</span><br><span class="line">          className=&#123;classNames(&#123;</span><br><span class="line">            [style.bannerDots]: true,</span><br><span class="line">            [style.bannerDotsSelected]: i + 1 === curIndex</span><br><span class="line">          &#125;)&#125;</span><br><span class="line">        /&gt;</span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div className=&#123;style.bannerDotsWrap&#125;&gt;</span><br><span class="line">        &#123;dotNodes&#125;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>scss</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">*&#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">touch-action</span>: pan-y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">margin-bottom</span>: <span class="number">10px</span>;</span><br><span class="line"></span><br><span class="line">  .bannerItem &#123;</span><br><span class="line">    <span class="selector-tag">display</span>: <span class="selector-tag">inline-block</span>;</span><br><span class="line">    &amp;&gt;<span class="selector-tag">a</span>&gt;<span class="selector-tag">img</span> &#123;</span><br><span class="line">      <span class="attribute">display</span>: block;</span><br><span class="line">      <span class="attribute">height</span>: <span class="built_in">calc</span>(25vw);</span><br><span class="line">      <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.bannerDotsWrap</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">2</span>;</span><br><span class="line">  <span class="attribute">margin-left</span>: <span class="number">12px</span>;</span><br><span class="line">  <span class="attribute">margin-bottom</span>: <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">  .bannerDots &#123;</span><br><span class="line">    <span class="selector-tag">display</span>: <span class="selector-tag">inline-block</span>;</span><br><span class="line">    <span class="selector-tag">width</span>: 6<span class="selector-tag">px</span>;</span><br><span class="line">    <span class="selector-tag">border</span>: 1<span class="selector-tag">px</span> <span class="selector-tag">solid</span> <span class="selector-tag">white</span>;</span><br><span class="line">    <span class="selector-tag">margin-right</span>: 6<span class="selector-tag">px</span>;</span><br><span class="line">    <span class="selector-tag">cursor</span>: <span class="selector-tag">pointer</span>;</span><br><span class="line">    &amp;<span class="selector-class">.bannerDotsSelected</span> &#123;</span><br><span class="line">      <span class="attribute">margin-bottom</span>: -<span class="number">2px</span>;</span><br><span class="line">      <span class="attribute">width</span>: <span class="number">4px</span>;</span><br><span class="line">      <span class="attribute">height</span>: <span class="number">4px</span>;</span><br><span class="line">      <span class="attribute">border</span>: <span class="number">1px</span>  solid white;</span><br><span class="line">      <span class="attribute">border-radius</span>: <span class="number">4px</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="二、banner-轮播部分逻辑"><a href="#二、banner-轮播部分逻辑" class="headerlink" title="二、banner 轮播部分逻辑"></a>二、banner 轮播部分逻辑</h3><ol>
+<li>Banner.js<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123; Component &#125; from &apos;react&apos;</span><br><span class="line">import &#123; BannerItem, BannerDots &#125; from &apos;./BannerItem&apos;</span><br><span class="line">import style from &apos;./style.scss&apos;</span><br><span class="line">export default class Banner extends Component &#123;</span><br><span class="line">  constructor (props) &#123;</span><br><span class="line">    super(props)</span><br><span class="line">    const &#123; sourceList, duration &#125; = this.props</span><br><span class="line">    const initTransit = &apos;all &apos; + duration + &apos;s ease &apos;</span><br><span class="line">    const sourceCount = sourceList.length</span><br><span class="line">    const itemList = [sourceList[sourceCount - 1]].concat(sourceList).concat([sourceList[0]])</span><br><span class="line">    const itemCount = itemList.length</span><br><span class="line"></span><br><span class="line">    this.state = &#123;</span><br><span class="line">      index: 1,</span><br><span class="line">      move: -100 / itemCount,</span><br><span class="line">      transition: initTransit,</span><br><span class="line">      itemList: itemList,</span><br><span class="line">      itemCount: itemCount,</span><br><span class="line">      sourceCount: sourceCount,</span><br><span class="line">      initTransit: initTransit</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    this.startPos = null</span><br><span class="line">    this.endPos = null</span><br><span class="line">    this.isScrolling = 0</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  componentDidMount () &#123;</span><br><span class="line">    this.autoPlay()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  turn = (step) =&gt; &#123;</span><br><span class="line">    const &#123; index, itemCount, sourceCount, initTransit &#125; = this.state</span><br><span class="line">    const &#123; duration &#125; = this.props</span><br><span class="line">    let curIndex = index + step</span><br><span class="line">    let move = -curIndex * 100 / itemCount</span><br><span class="line">    this.setState(&#123;</span><br><span class="line">      move: move,</span><br><span class="line">      transition: initTransit</span><br><span class="line">    &#125;)</span><br><span class="line">    if (curIndex &lt; 1 || curIndex &gt; sourceCount) &#123;</span><br><span class="line">      if (curIndex &lt; 1) &#123;</span><br><span class="line">        curIndex = curIndex + sourceCount</span><br><span class="line">      &#125; else if (curIndex &gt; sourceCount) &#123;</span><br><span class="line">        curIndex = curIndex - sourceCount</span><br><span class="line">      &#125;</span><br><span class="line">      move = -curIndex * 100 / itemCount</span><br><span class="line">      setTimeout(() =&gt; &#123;</span><br><span class="line">        this.setState(&#123; move: move, transition: &apos;none&apos; &#125;)</span><br><span class="line">      &#125;, duration * 1000)</span><br><span class="line">    &#125;</span><br><span class="line">    this.setState(&#123;</span><br><span class="line">      index: curIndex</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  autoPlay = () =&gt; &#123;</span><br><span class="line">    if (this.props.autoplay) &#123;</span><br><span class="line">      this.autoPlayFlag = setInterval(() =&gt; &#123;</span><br><span class="line">        this.turn(1)</span><br><span class="line">      &#125;, this.props.delay * 1000)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  pausePlay = () =&gt; &#123;</span><br><span class="line">    clearInterval(this.autoPlayFlag)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  onTouchStart = (event) =&gt; &#123;</span><br><span class="line">    this.pausePlay()</span><br><span class="line">    let touch = event.targetTouches[0]</span><br><span class="line">    this.startPos = &#123; x: touch.pageX, y: touch.pageY, time: +new Date() &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  onTouchMove = (event) =&gt; &#123;</span><br><span class="line">    if (event.targetTouches.length &gt; 1 || (event.scale &amp;&amp; event.scale !== 1)) return</span><br><span class="line">    let touch = event.targetTouches[0]</span><br><span class="line">    this.endPos = &#123; x: touch.pageX - this.startPos.x, y: touch.pageY - this.startPos.y &#125;</span><br><span class="line">    this.isScrolling = Math.abs(this.endPos.x) &lt; Math.abs(this.endPos.y) ? 1 : 0</span><br><span class="line">    if (this.isScrolling === 0) &#123;</span><br><span class="line">      event.preventDefault()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  onTouchEnd = (event) =&gt; &#123;</span><br><span class="line">    let duration = +new Date() - this.startPos.time</span><br><span class="line">    if (this.isScrolling === 0) &#123;</span><br><span class="line">      if (Number(duration) &gt; 10) &#123;</span><br><span class="line">        if (this.endPos &amp;&amp; this.endPos.x &gt; 10) &#123;</span><br><span class="line">          this.turn(-1)</span><br><span class="line">        &#125; else if (this.endPos &amp;&amp; this.endPos.x &lt; -10) &#123;</span><br><span class="line">          this.turn(1)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    this.autoPlay()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render () &#123;</span><br><span class="line">    const &#123; sourceCount, itemCount, itemList, move, transition, index &#125; = this.state</span><br><span class="line">    const &#123; pause &#125; = this.props</span><br><span class="line">    const curStyle = &#123;</span><br><span class="line">      transform: &apos;translateX(&apos; + (move) + &apos;%)&apos;,</span><br><span class="line">      transition: transition,</span><br><span class="line">      width: itemCount * 100 + &apos;%&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    return sourceCount ? (</span><br><span class="line">      &lt;div</span><br><span class="line">        className=&#123;style.banner&#125;</span><br><span class="line">        onMouseOver=&#123;pause ? this.pausePlay : null&#125;</span><br><span class="line">        onMouseOut=&#123;pause ? this.autoPlay : null&#125;&gt;</span><br><span class="line">        &lt;ul style=&#123;curStyle&#125;</span><br><span class="line">          onTouchStart=&#123;this.onTouchStart&#125;</span><br><span class="line">          onTouchMove=&#123;this.onTouchMove&#125;</span><br><span class="line">          onTouchEnd=&#123;this.onTouchEnd&#125;</span><br><span class="line">        &gt;</span><br><span class="line">          &#123; itemList.map((item, idx) =&gt; &#123;</span><br><span class="line">            return (&lt;BannerItem</span><br><span class="line">              item=&#123;item&#125;</span><br><span class="line">              count=&#123;itemCount&#125;</span><br><span class="line">              key=&#123;&apos;item&apos; + idx&#125; /&gt;)</span><br><span class="line">          &#125;)&#125;</span><br><span class="line">        &lt;/ul&gt;</span><br><span class="line">        &#123;&lt;BannerDots count=&#123;sourceCount&#125; curIndex=&#123;index&#125; /&gt;&#125;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    ) : null</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Banner.defaultProps = &#123;</span><br><span class="line">  duration: 1,</span><br><span class="line">  delay: 3,</span><br><span class="line">  pause: false,</span><br><span class="line">  autoplay: true,</span><br><span class="line">  dots: true,</span><br><span class="line">  sourceList: []</span><br><span class="line">&#125;</span><br><span class="line">Banner.autoPlayFlag = null</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="三、banner-数据请求逻辑部分"><a href="#三、banner-数据请求逻辑部分" class="headerlink" title="三、banner 数据请求逻辑部分"></a>三、banner 数据请求逻辑部分</h3><ol>
+<li>index.js<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123; Component &#125; from &apos;react&apos;</span><br><span class="line">import &#123; bannerApi &#125; from &apos;@api/index.js&apos;</span><br><span class="line">import Banner from &apos;./Banner.js&apos;</span><br><span class="line"></span><br><span class="line">class ShowBanner extends Component &#123;</span><br><span class="line">  constructor (props) &#123;</span><br><span class="line">    super(props)</span><br><span class="line">    this.state = &#123;</span><br><span class="line">      itemList: []</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  componentDidMount () &#123;</span><br><span class="line">    bannerApi.fetchBannerInfo(&#123; query: &#123;&#125; &#125;).then((data) =&gt; &#123;</span><br><span class="line">      if (data &amp;&amp; data.data[0] &amp;&amp; data.data[0].imgInfo) &#123;</span><br><span class="line">        const itemList = data.data[0].imgInfo.map((item) =&gt; &#123;</span><br><span class="line">          return &#123;</span><br><span class="line">            src: item.location,</span><br><span class="line">            link: item.url,</span><br><span class="line">            alt: &apos;images&apos; + item.ordinal</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        this.setState(&#123;</span><br><span class="line">          itemList: itemList</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render () &#123;</span><br><span class="line">    const &#123; itemList &#125; = this.state</span><br><span class="line">    return itemList.length ? (</span><br><span class="line">      &lt;Banner</span><br><span class="line">        sourceList=&#123;itemList&#125;</span><br><span class="line">        duration=&#123;2&#125;</span><br><span class="line">        delay=&#123;3&#125;</span><br><span class="line">        autoplay</span><br><span class="line">        dots</span><br><span class="line">      /&gt;</span><br><span class="line">    ) : null</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default ShowBanner</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="四、调用demo"><a href="#四、调用demo" class="headerlink" title="四、调用demo"></a>四、调用demo</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import React from &apos;react&apos;</span><br><span class="line">import ReactDom from &apos;react-dom&apos;</span><br><span class="line">import style from &apos;./index.scss&apos;</span><br><span class="line">import ShowBanner from &apos;@comp/Banner/index.js&apos;</span><br><span class="line"></span><br><span class="line">ReactDom.render(</span><br><span class="line">  (&lt;div&gt;</span><br><span class="line">    &lt;h1 className=&#123;style.main&#125;&gt;Banner Componets&lt;/h1&gt;</span><br><span class="line">    &lt;ShowBanner /&gt;</span><br><span class="line">  &lt;/div&gt;),</span><br><span class="line">  document.getElementById(&apos;root&apos;)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/banner/" rel="tag"># banner</a>
+              <a href="/tags/componets/" rel="tag"># componets</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/10/22/express和mockjs搭建mock服务/" rel="prev" title="express和mockjs搭建mock服务">
+      <i class="fa fa-chevron-left"></i> express和mockjs搭建mock服务
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/11/16/ant-pro-替换roadhog为webpack/" rel="next" title="ant-pro 替换roadhog为webpack">
+      ant-pro 替换roadhog为webpack <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、banner-ui部分"><span class="nav-number">1.</span> <span class="nav-text">一、banner ui部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、banner-轮播部分逻辑"><span class="nav-number">2.</span> <span class="nav-text">二、banner 轮播部分逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、banner-数据请求逻辑部分"><span class="nav-number">3.</span> <span class="nav-text">三、banner 数据请求逻辑部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、调用demo"><span class="nav-number">4.</span> <span class="nav-text">四、调用demo</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

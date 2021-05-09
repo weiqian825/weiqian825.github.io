@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="我们前面说到，react项目接入vconsole后，发现不支持fetch，于是拉取vconsole库，看看下如何改写源码使它支持fetch 一、搭建DevServer服务源码里面只有生成dist部分的命令，不能自己调试开发，所以我们需要搭建一个DevServer支持我们开发功能。 123456789101112131415// package.json&amp;#123;    &quot;scripts&quot;: &amp;#">
+<meta name="keywords" content="vconsole,fetch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="让vconsole支持fetch">
+<meta property="og:url" content="http://yoursite.com/2018/08/24/让vconsole支持fetch/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="我们前面说到，react项目接入vconsole后，发现不支持fetch，于是拉取vconsole库，看看下如何改写源码使它支持fetch 一、搭建DevServer服务源码里面只有生成dist部分的命令，不能自己调试开发，所以我们需要搭建一个DevServer支持我们开发功能。 123456789101112131415// package.json&amp;#123;    &quot;scripts&quot;: &amp;#">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.400Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="让vconsole支持fetch">
+<meta name="twitter:description" content="我们前面说到，react项目接入vconsole后，发现不支持fetch，于是拉取vconsole库，看看下如何改写源码使它支持fetch 一、搭建DevServer服务源码里面只有生成dist部分的命令，不能自己调试开发，所以我们需要搭建一个DevServer支持我们开发功能。 123456789101112131415// package.json&amp;#123;    &quot;scripts&quot;: &amp;#">
+
+<link rel="canonical" href="http://yoursite.com/2018/08/24/让vconsole支持fetch/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>让vconsole支持fetch | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/24/让vconsole支持fetch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          让vconsole支持fetch
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-08-24 19:36:20" itemprop="dateCreated datePublished" datetime="2018-08-24T19:36:20+00:00">2018-08-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web/" itemprop="url" rel="index"><span itemprop="name">web</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>我们<a href="https://weiqian93.github.io/2018/08/22/sentry%E5%92%8Cvconsole%E7%9A%84%E5%BA%94%E7%94%A8/" target="_blank" rel="noopener">前面</a>说到，react项目接入vconsole后，发现不支持fetch，于是拉取<a href="https://github.com/Tencent/vConsole" target="_blank" rel="noopener">vconsole</a>库，看看下如何改写源码使它支持fetch</p>
+<h3 id="一、搭建DevServer服务"><a href="#一、搭建DevServer服务" class="headerlink" title="一、搭建DevServer服务"></a>一、搭建DevServer服务</h3><p>源码里面只有生成dist部分的命令，不能自己调试开发，所以我们需要搭建一个DevServer支持我们开发功能。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"scripts"</span>: &#123;</span><br><span class="line">        <span class="string">"test"</span>: <span class="string">"mocha"</span>,</span><br><span class="line">        <span class="string">"dist"</span>: <span class="string">"webpack"</span>,</span><br><span class="line">        <span class="string">"dev"</span>: <span class="string">"webpack-dev-server --config webpack.dev.conf.js"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"devDependencies"</span>: &#123;</span><br><span class="line">        <span class="string">"webpack"</span>: <span class="string">"~1.12.11"</span>,</span><br><span class="line">        <span class="string">"webpack-dev-server"</span>: <span class="string">"1.14.0"</span>,</span><br><span class="line">        <span class="string">"webpack-merge"</span>: <span class="string">"^0.14.1"</span>,</span><br><span class="line">        <span class="string">"html-webpack-plugin"</span>: <span class="string">"^2.8.1"</span>,</span><br><span class="line">        <span class="string">"extract-text-webpack-plugin"</span>: <span class="string">"^1.0.1"</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.dev.conf.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>)</span><br><span class="line"><span class="keyword">var</span> merge = <span class="built_in">require</span>(<span class="string">'webpack-merge'</span>)</span><br><span class="line"><span class="keyword">var</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">'html-webpack-plugin'</span>)</span><br><span class="line"><span class="keyword">var</span> baseConfig = <span class="built_in">require</span>(<span class="string">'./webpack.config.js'</span>)</span><br><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = merge(baseConfig, &#123;</span><br><span class="line">  entry: <span class="string">'./dev/index.js'</span>,</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    historyApiFallback: <span class="literal">true</span>,</span><br><span class="line">    noInfo: <span class="literal">true</span>,</span><br><span class="line">    overlay: <span class="literal">true</span>,</span><br><span class="line">    open: <span class="literal">true</span>,</span><br><span class="line">    hot: <span class="literal">true</span>,</span><br><span class="line">    inline: <span class="literal">true</span></span><br><span class="line">  &#125;,</span><br><span class="line">  devtool: <span class="string">'#eval-source-map'</span>,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">      template: <span class="string">'./dev/index.html'</span>,</span><br><span class="line">      filename: <span class="string">'index.html'</span>,</span><br><span class="line">      inject: <span class="literal">true</span></span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> webpack.HotModuleReplacementPlugin()</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>// mkdir dev —index.html index.js data.json 等<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// index.html</span><br><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"X-UA-Compatible"</span> <span class="attr">content</span>=<span class="string">"ie=edge"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> VConsole = <span class="built_in">require</span>(<span class="string">'../src/vconsole'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> vc = <span class="keyword">new</span> VConsole()</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(vc)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'start vconsole'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">window</span>.fetch(<span class="string">'http://localhost:8080/dev/data.json?fetch=test'</span>,&#123;<span class="attr">method</span>:<span class="string">'GET'</span>&#125;).then(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(data)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> xhr = <span class="keyword">new</span> XMLHttpRequest()</span><br><span class="line">xhr.open(<span class="string">'get'</span>,<span class="string">'http://localhost:8080/dev/data.json?xhr=ajax'</span>)</span><br><span class="line">xhr.send()</span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//data.json</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"test"</span>: <span class="number">123</span>,</span><br><span class="line">    <span class="attr">"testjson"</span>:&#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>试着运行下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm i</span><br><span class="line">npm run dev</span><br></pre></td></tr></table></figure></p>
+<h3 id="二、如何拦截fetch呢"><a href="#二、如何拦截fetch呢" class="headerlink" title="二、如何拦截fetch呢"></a>二、如何拦截fetch呢</h3><p>vconsole里面可以抓到ajax的请求包，是在network里面对XMLHttpRequest进行了重写，拦截到相关信息记录下来并在日志面板显示。依照这个思路，我们初步想的是如何重写fetch又不影响它原来的功能，于是搜索到一篇很有意思的<a href="http://undefinedblog.com/how-to-intercept-fetch/" target="_blank" rel="noopener">博客</a>，利用fetch里面的respone.clone()这个特性在中间做一些拦截记录的工作如下。<br>代码思路</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mockFetch()&#123;</span><br><span class="line">    <span class="keyword">let</span> _fetch = <span class="built_in">window</span>.fetch</span><br><span class="line">    <span class="keyword">let</span> prevFetch = <span class="function">(<span class="params">url,init</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">//做一些发请求前的记录工作</span></span><br><span class="line">        <span class="keyword">return</span> _fetch(url,init).then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="comment">//利用response.clone()这个特性真正的做一些事情</span></span><br><span class="line">            response.clone().json().then(<span class="function"><span class="params">json</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="comment">// 具体在这里</span></span><br><span class="line">            &#125;)</span><br><span class="line">            <span class="keyword">return</span> response</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>具体代码<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"> mockFetch() &#123;</span><br><span class="line">  <span class="keyword">let</span> _fetch = <span class="built_in">window</span>.fetch;</span><br><span class="line">  <span class="keyword">if</span>(!_fetch)&#123; <span class="keyword">return</span>; &#125;</span><br><span class="line">  <span class="keyword">let</span> that = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> prevFetch = <span class="function">(<span class="params">url,init</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> id = that.getUniqueID()</span><br><span class="line">    that.reqList[id] = &#123;&#125;</span><br><span class="line">    <span class="keyword">let</span> item = that.reqList[id] || &#123;&#125;;</span><br><span class="line">    <span class="keyword">let</span> query = url.split(<span class="string">'?'</span>); </span><br><span class="line">    item.id = id;</span><br><span class="line">    item.method = init.method||<span class="string">'GET'</span>;</span><br><span class="line">    item.url = query.shift(); </span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (query.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      item.getData = &#123;&#125;;</span><br><span class="line">      query = query.join(<span class="string">'?'</span>); <span class="comment">// =&gt; 'b=c&amp;d=?e'</span></span><br><span class="line">      query = query.split(<span class="string">'&amp;'</span>); <span class="comment">// =&gt; ['b=c', 'd=?e']</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> q <span class="keyword">of</span> query) &#123;</span><br><span class="line">        q = q.split(<span class="string">'='</span>);</span><br><span class="line">        item.getData[ q[<span class="number">0</span>] ] = q[<span class="number">1</span>];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (item.method == <span class="string">'POST'</span>) &#123;</span><br><span class="line">      <span class="comment">// save POST data</span></span><br><span class="line">      <span class="keyword">if</span> (tool.isString(data)) &#123;</span><br><span class="line">        <span class="keyword">let</span> arr = data.split(<span class="string">'&amp;'</span>);</span><br><span class="line">        item.postData = &#123;&#125;;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> q <span class="keyword">of</span> arr) &#123;</span><br><span class="line">          q = q.split(<span class="string">'='</span>);</span><br><span class="line">          item.postData[ q[<span class="number">0</span>] ] = q[<span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tool.isPlainObject(data)) &#123;</span><br><span class="line">        item.postData = data;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// UNSENT</span></span><br><span class="line">    <span class="keyword">if</span> (!item.startTime) &#123;</span><br><span class="line">      item.startTime = (+<span class="keyword">new</span> <span class="built_in">Date</span>());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> _fetch(url,init).then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">      response.clone().json().then(<span class="function"><span class="params">json</span> =&gt;</span> &#123;</span><br><span class="line">        item.endTime = +<span class="keyword">new</span> <span class="built_in">Date</span>(),</span><br><span class="line">        item.costTime = item.endTime - (item.startTime || item.endTime);</span><br><span class="line">        item.status = response.status;</span><br><span class="line">        item.header = &#123;&#125;</span><br><span class="line">        <span class="comment">// 拿到header里面的东西</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> pair <span class="keyword">of</span> response.headers.entries()) &#123;</span><br><span class="line">          item.header[pair[<span class="number">0</span>]] = pair[<span class="number">1</span>]</span><br><span class="line">          <span class="built_in">console</span>.log(pair[<span class="number">0</span>])</span><br><span class="line">        &#125;</span><br><span class="line">        item.response = json;</span><br><span class="line">        item.readyState = <span class="number">4</span>;</span><br><span class="line">        item.responseType = response.type</span><br><span class="line">        that.updateRequest(id, item)</span><br><span class="line">        <span class="keyword">return</span> json</span><br><span class="line">      &#125;)</span><br><span class="line">      <span class="keyword">return</span> response</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">window</span>.fetch = prevFetch</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="三、生成目标js"><a href="#三、生成目标js" class="headerlink" title="三、生成目标js"></a>三、生成目标js</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">//webpack.config.js</span><br><span class="line">var pkg = require('./package.json');</span><br><span class="line">var webpack = require('webpack');</span><br><span class="line">var ExtractTextPlugin = require('extract-text-webpack-plugin');</span><br><span class="line"></span><br><span class="line">module.exports = &#123;</span><br><span class="line">  devtool: false,</span><br><span class="line">  entry: &#123;</span><br><span class="line">    vconsole : './src/vconsole.js'</span><br><span class="line">  &#125;,</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: './dist',</span><br><span class="line">    filename: '[name].min.js',</span><br><span class="line">    library: 'VConsole',</span><br><span class="line">    libraryTarget: 'umd'</span><br><span class="line">    // umdNameDefine: true</span><br><span class="line">  &#125;,</span><br><span class="line">  module: &#123;</span><br><span class="line">    loaders: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: /\.html$/, loader: 'html?minimize=false'</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123; </span><br><span class="line">        test: /\.js$/, loader: 'babel'</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: /\.less$/,</span><br><span class="line">        loader: 'style!css!less'</span><br><span class="line">        // loader: ExtractTextPlugin.extract('style-loader', 'css-loader!less-loader') // 将css独立打包</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: /\.json$/, loader: 'json'</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    new webpack.BannerPlugin([</span><br><span class="line">        'vConsole v' + pkg.version + ' (' + pkg.homepage + ')',</span><br><span class="line">        '',</span><br><span class="line">    ].join('\n'))</span><br><span class="line">    // 开发调试项目的时候先去掉压缩命令，确认没有问题，生产版本再加上</span><br><span class="line">    // ,new webpack.optimize.UglifyJsPlugin(&#123;</span><br><span class="line">    //   compress: &#123;</span><br><span class="line">    //     warnings: false</span><br><span class="line">    //   &#125;</span><br><span class="line">    // &#125;)</span><br><span class="line">    // ,new ExtractTextPlugin('[name].min.css') // 将css独立打包</span><br><span class="line">  ]</span><br><span class="line">&#125;;</span><br><span class="line">//package.json</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"main"</span>: <span class="string">"dist/vconsole.min.js"</span>,</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"test"</span>: <span class="string">"mocha"</span>,</span><br><span class="line">    <span class="attr">"dist"</span>: <span class="string">"webpack"</span>,</span><br><span class="line">    <span class="attr">"dev"</span>: <span class="string">"webpack-dev-server --config webpack.dev.conf.js"</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="四、问题记录"><a href="#四、问题记录" class="headerlink" title="四、问题记录"></a>四、问题记录</h3><ol>
+<li><p>header在window.XMLHtmlRequest里获取的方法是getAllResponseHeaders()。在fetch里面需要去遍历entries</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> pair <span class="keyword">of</span> response.headers.entries()) &#123;</span><br><span class="line">  item.header[pair[<span class="number">0</span>]] = pair[<span class="number">1</span>]</span><br><span class="line">  <span class="built_in">console</span>.log(pair[<span class="number">0</span>])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>response是json的时候，面板打印不出来具体数据，打印的是[object object]，看了下是vconsole里面重写了JSON.stringify()，重写的作用是？</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/vconsole/" rel="tag"># vconsole</a>
+              <a href="/tags/fetch/" rel="tag"># fetch</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/08/22/sentry和vconsole的应用/" rel="prev" title="sentry和vconsole的应用 ">
+      <i class="fa fa-chevron-left"></i> sentry和vconsole的应用 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/08/30/electron做go爬虫的gui/" rel="next" title="electron做go爬虫的gui">
+      electron做go爬虫的gui <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、搭建DevServer服务"><span class="nav-number">1.</span> <span class="nav-text">一、搭建DevServer服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、如何拦截fetch呢"><span class="nav-number">2.</span> <span class="nav-text">二、如何拦截fetch呢</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、生成目标js"><span class="nav-number">3.</span> <span class="nav-text">三、生成目标js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、问题记录"><span class="nav-number">4.</span> <span class="nav-text">四、问题记录</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

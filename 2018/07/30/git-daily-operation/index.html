@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、新建代码库 12git init  #在当前目录新建一个git仓库git clone url  #下载一个历史和整个代码 二、在一个 master 分支下工作 1234567git pull  #拉取代码git status #查看本地仓库修改状态git add . #暂存文件git commit #提交文件git pull  #拉取最新代码git push  #提交代码git log #查看">
+<meta name="keywords" content="git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git daily operation ">
+<meta property="og:url" content="http://yoursite.com/2018/07/30/git-daily-operation/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="一、新建代码库 12git init  #在当前目录新建一个git仓库git clone url  #下载一个历史和整个代码 二、在一个 master 分支下工作 1234567git pull  #拉取代码git status #查看本地仓库修改状态git add . #暂存文件git commit #提交文件git pull  #拉取最新代码git push  #提交代码git log #查看">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="git daily operation ">
+<meta name="twitter:description" content="一、新建代码库 12git init  #在当前目录新建一个git仓库git clone url  #下载一个历史和整个代码 二、在一个 master 分支下工作 1234567git pull  #拉取代码git status #查看本地仓库修改状态git add . #暂存文件git commit #提交文件git pull  #拉取最新代码git push  #提交代码git log #查看">
+
+<link rel="canonical" href="http://yoursite.com/2018/07/30/git-daily-operation/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>git daily operation  | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/30/git-daily-operation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          git daily operation 
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-07-30 15:41:28" itemprop="dateCreated datePublished" datetime="2018-07-30T15:41:28+00:00">2018-07-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tools/" itemprop="url" rel="index"><span itemprop="name">tools</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>一、新建代码库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git init  #在当前目录新建一个git仓库</span><br><span class="line">git clone url  #下载一个历史和整个代码</span><br></pre></td></tr></table></figure>
+<p>二、在一个 master 分支下工作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git pull  #拉取代码</span><br><span class="line">git status #查看本地仓库修改状态</span><br><span class="line">git add . #暂存文件</span><br><span class="line">git commit #提交文件</span><br><span class="line">git pull  #拉取最新代码</span><br><span class="line">git push  #提交代码</span><br><span class="line">git log #查看日志</span><br></pre></td></tr></table></figure>
+<p>三、创建一个本地分支 feature</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b test master  #新建分支并切换到新建分支</span><br><span class="line">git branch  #本地分支</span><br><span class="line">git branch -d #删除分支(删除分支之前先checkout分支)</span><br><span class="line">git checkout #切换分支</span><br><span class="line">git branch -a #查看所有分支</span><br><span class="line">git branch -r #查看远程分支</span><br></pre></td></tr></table></figure>
+<p>四、合并代码到 release 分支</p>
+<p>方案一: 合并 master 到 test，然后在把 test 合并到 master 这个时候比较绕进行了 2 次操作，以防止意外。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git pull origin master #假设在当前在test分支，git pull合并代码，如果有冲突，解决重突。解决完冲突后直接正常add. commit pull push 同样的代码在执行一次。checkout master去拉取test分支。</span><br><span class="line">git reset --hard HEAD #撤销merge</span><br></pre></td></tr></table></figure>
+<p>方案二：直接从 master 拉取指定的 test 分支</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull origin test</span><br></pre></td></tr></table></figure>
+<p>五、解决冲突</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">当出现冲突时，git会在代码中标记出来</span><br><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span><br><span class="line">当前的更改</span><br><span class="line">=======</span><br><span class="line">merge的更改</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span><br><span class="line">根据需要选择保留或者遗弃代码后，再执行add, commit就可以完成merge</span><br></pre></td></tr></table></figure>
+<p>六、删除分支</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git branch -r -d origin/branch-name // 删除本地的origin/branch-name游标</span><br><span class="line">git branch -d branch-name //删除本地分支，发生过merge的才可以</span><br><span class="line">git branch -D branch-name //强制删除本地分支</span><br><span class="line">git push origin :branch-name  //删除远程分支</span><br><span class="line">git push -d origin branch-name //删除远程分支</span><br><span class="line">//删除本地分支</span><br><span class="line">git branch -a| grep -v -E &apos;master|release&apos; | grep &apos;test.*&apos; |  xargs -I &#123;&#125; git br -d &#123;&#125;</span><br><span class="line">//删除远程分支</span><br><span class="line">git branch -r| grep -v -E &apos;master|release&apos; | sed &apos;s/origin\/test/test/g&apos; | xargs -I &#123;&#125; git push origin :&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>七、命令缩写等小技巧</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config -e --global</span><br><span class="line">vscode GitLens</span><br><span class="line">git cherry-pick xxxxx</span><br></pre></td></tr></table></figure>
+<p>八、常见工作场景及问题解决</p>
+<ol>
+<li><p>在开发一个项目不同需求的时候，需要拉取不同的特性分支，此时常常会出现在 4、5 个特性分支上切换  以配合不同开发测试联调需求，挺烦人的这种，没办法这就是工作呗，幸好 Git 强大一逼，stash 完美的解决了这样的问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git stash list #查看stashlist历史</span><br><span class="line">git stash apply 1(id) #将指定的代码pop出来，在最新代码上完成合并</span><br><span class="line">git stash pop #将最新的一次pop出来</span><br><span class="line">git stash drop #丢弃某一次stash</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>提交的时候不小心 commit 了一个错误的版本，想撤销 commit。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 撤销-可以理解为未进行push的本地代码还原</span><br><span class="line">git checkout fileName               #未执行add</span><br><span class="line">git checkout .                      #未执行add</span><br><span class="line">git reset HEAD fileName             #已执行add</span><br><span class="line">git commit --amend                  #已执行commit</span><br><span class="line">git reset --hard [commit | HEAD]    #已执行commit</span><br><span class="line">git reflog                          #已执行reset --hard</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//回滚-可以理解为已进行push的远程代码还原</span><br><span class="line">git reset --hard HEAD^          	#reset会删除commit提交历史</span><br><span class="line">git push -f			                #本地会比远程落后，所以需要加上force</span><br><span class="line"></span><br><span class="line">git revert HEAD		                #revert放弃指定提交，会生成一次新的提交</span><br><span class="line">git push			                #保留以前的提交历史</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>提交的 log 因为某些原因比较乱，需要整理和<a href="https://git-reference.readthedocs.io/zh_CN/latest/Git-Tools/Rewriting-History/" target="_blank" rel="noopener">重写 log</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 撤销-可以理解为未进行push的本地代码还原</span><br><span class="line">git rebase -i HEAD~3                #修改最近3次的提交</span><br><span class="line">git commit -amend                   #改变最近一次提交记录</span><br><span class="line">git rebase --continue               #自动应用其他2次提交</span><br><span class="line">git rebase --abort                  #做了一波眼花缭乱的操作之后，想要放弃回到原点</span><br><span class="line">//压制(Squashing)提交，将多次提交合并为单一提交</span><br></pre></td></tr></table></figure>
+<p>demo</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">➜  Windrunner git:(test_notice) git <span class="built_in">log</span> --oneline</span><br><span class="line">➜  Windrunner git:(test_notice) git rebase -i HEAD~10</span><br><span class="line">➜  Windrunner git:(fdd5404) ✗ git rebase --abort</span><br><span class="line">➜  Windrunner git:(test_notice) git rebase -i HEAD~10</span><br><span class="line">Auto-merging src/components/Common/FieldForm/Comp/Form.js</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span>     src/components/Common/FieldForm/Comp/Form.js</span><br><span class="line">Auto-merging src/components/Common/FieldForm/Comp/Fields/ArrayField.js</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span>     src/components/Common/FieldForm/Comp/Fields/ArrayField.js</span><br><span class="line">Auto-merging config/webpack.dev.conf.js</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> config/webpack.dev.conf.js</span><br><span class="line">error: could not apply bb1121f... fix: 🐛 fix the tree state</span><br><span class="line"></span><br><span class="line">Resolve all conflicts manually, mark them as resolved with</span><br><span class="line"><span class="string">"git add/rm &lt;conflicted_files&gt;"</span>, <span class="keyword">then</span> run <span class="string">"git rebase --continue"</span>.</span><br><span class="line">You can instead skip this commit: run <span class="string">"git rebase --skip"</span>.</span><br><span class="line">To abort and get back to the state before <span class="string">"git rebase"</span>, run <span class="string">"git rebase     --abort"</span>.</span><br><span class="line"></span><br><span class="line">Could not apply bb1121f... fix: 🐛 fix the tree state</span><br><span class="line">➜  Windrunner git:(aab68bb) ✗ git rebase --<span class="built_in">continue</span></span><br><span class="line">config/webpack.dev.conf.js: needs merge</span><br><span class="line">src/components/Common/FieldForm/Comp/Fields/ArrayField.js: needs merge</span><br><span class="line">src/components/Common/FieldForm/Comp/Form.js: needs merge</span><br><span class="line">You must edit all merge conflicts and <span class="keyword">then</span></span><br><span class="line">mark them as resolved using git add</span><br><span class="line">➜  Windrunner git:(aab68bb) ✗ git add -A</span><br><span class="line">➜  Windrunner git:(aab68bb) ✗ git rebase --<span class="built_in">continue</span></span><br><span class="line">[detached HEAD a9c1a3c] fix: 🐛 fix the tree state</span><br><span class="line">Author: Qian Wei &lt;qian.wei@xxxxx.com&gt;</span><br><span class="line">8 files changed, 121 insertions(+), 157 deletions(-)</span><br><span class="line">rewrite src/components/Common/FieldForm/Comp/Fields/ObjectField.js (67%)</span><br><span class="line">Auto-merging src/reducers/notice/fetch.js</span><br><span class="line">Auto-merging src/pages/Notice/Setting.js</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> src/pages/Notice/Setting.js</span><br><span class="line">error: could not apply 4036dcc... fix: 🐛 fix the state</span><br><span class="line"></span><br><span class="line">Resolve all conflicts manually, mark them as resolved with</span><br><span class="line"><span class="string">"git add/rm &lt;conflicted_files&gt;"</span>, <span class="keyword">then</span> run <span class="string">"git rebase --continue"</span>.</span><br><span class="line">You can instead skip this commit: run <span class="string">"git rebase --skip"</span>.</span><br><span class="line">To abort and get back to the state before <span class="string">"git rebase"</span>, run <span class="string">"git rebase     --abort"</span>.</span><br><span class="line"></span><br><span class="line">Could not apply 4036dcc... fix: 🐛 fix the state</span><br><span class="line">➜  Windrunner git:(3e22969) ✗ git add -A</span><br><span class="line">➜  Windrunner git:(3e22969) ✗ git rebase --<span class="built_in">continue</span></span><br><span class="line">[detached HEAD 42346cb] fix: 🐛 fix the state</span><br><span class="line"> Author: Qian Wei &lt;qian.wei@xxxxx.com&gt;</span><br><span class="line"> 3 files changed, 41 insertions(+), 39 deletions(-)</span><br><span class="line">Successfully rebased and updated refs/heads/test_notice.</span><br><span class="line">➜  Windrunner git:(test_notice) git <span class="built_in">log</span></span><br><span class="line">➜  Windrunner git:(test_notice) git push</span><br><span class="line">To ssh://git.garena.com:2222/xxxxx/digital-purchase/Windrunner.git</span><br><span class="line"> ! [rejected]        test_notice -&gt; test_notice (non-fast-forward)</span><br><span class="line">error: failed to push some refs to     <span class="string">'ssh://gitlab@git.garena.com:2222/xxxxx/digital-purchase/Windrunner.git'</span></span><br><span class="line">hint: Updates were rejected because the tip of your current branch is behind</span><br><span class="line">hint: its remote counterpart. Integrate the remote changes (e.g.</span><br><span class="line">hint: <span class="string">'git pull ...'</span>) before pushing again.</span><br><span class="line">hint: See the <span class="string">'Note about fast-forwards'</span> <span class="keyword">in</span> <span class="string">'git push --help'</span> <span class="keyword">for</span> details.</span><br><span class="line">➜  Windrunner git:(test_notice) git pull</span><br><span class="line">Auto-merging src/utils/utils.js</span><br><span class="line">Auto-merging src/reducers/notice/fetch.js</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> src/reducers/notice/fetch.js</span><br><span class="line">Auto-merging src/pages/Notice/Setting.js</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> src/pages/Notice/Setting.js</span><br><span class="line">Automatic merge failed; fix conflicts and <span class="keyword">then</span> commit the result.</span><br><span class="line">➜  Windrunner git:(test_notice) ✗ git add -A</span><br><span class="line">➜  Windrunner git:(test_notice) ✗ npm run commit</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>日常新建一个仓库之后要做的</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Git global setup</span><br><span class="line">git config --global user.name <span class="string">"Qian Wei"</span></span><br><span class="line">git config --global user.email <span class="string">"qian.wei@xxxxx.com"</span></span><br><span class="line"></span><br><span class="line">Create a new repository</span><br><span class="line">git <span class="built_in">clone</span> ssh://gitlab@git.garena.com:2222/qian.wei/sentry.git</span><br><span class="line"><span class="built_in">cd</span> sentry</span><br><span class="line">touch README.md</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m <span class="string">"add README"</span></span><br><span class="line">git push -u origin master</span><br><span class="line"></span><br><span class="line">Existing folder</span><br><span class="line"><span class="built_in">cd</span> existing_folder</span><br><span class="line">git init</span><br><span class="line">git remote add origin ssh://gitlab@git.garena.com:2222/qian.wei/sentry.git</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">"Initial commit"</span></span><br><span class="line">git push -u origin master</span><br><span class="line"></span><br><span class="line">Existing Git repository</span><br><span class="line"><span class="built_in">cd</span> existing_repo</span><br><span class="line">git remote rename origin old-origin</span><br><span class="line">git remote add origin ssh://gitlab@git.garena.com:2222/qian.wei/sentry.git</span><br><span class="line">git push -u origin --all</span><br><span class="line">git push -u origin --tags</span><br><span class="line"></span><br><span class="line">Existing Git repository2</span><br><span class="line"><span class="built_in">cd</span> existing_repo</span><br><span class="line">git remote <span class="built_in">set</span>-url origin https://github.com/weiqian93/vconsole.git</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>cherry-pick、reset、revert</p>
+</li>
+<li><p>git 对文件名的大小写不敏感，修改了文件的大小写，git st 并没有改动</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//方法一 git设置忽略文件</span><br><span class="line">git config core.ignorecase <span class="literal">false</span></span><br><span class="line">//方法二 git rm/add/commit xxx</span><br><span class="line">git rm xxx</span><br><span class="line">git add xxx</span><br><span class="line">git commit xxx</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>更改 git 提交记录的 author 和 email<a href="https://help.github.com/en/articles/changing-author-info" target="_blank" rel="noopener">方法</a></p>
+<p>执行脚本</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line">git filter-branch --env-filter <span class="string">'</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">OLD_EMAIL="qian.wei@shopee.com"</span></span><br><span class="line"><span class="string">CORRECT_NAME="weiqian93"</span></span><br><span class="line"><span class="string">CORRECT_EMAIL="540518665@qq.com"</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">if [ "$GIT_COMMITTER_EMAIL" = "$OLD_EMAIL" ]</span></span><br><span class="line"><span class="string">then</span></span><br><span class="line"><span class="string">    export GIT_COMMITTER_NAME="$CORRECT_NAME"</span></span><br><span class="line"><span class="string">    export GIT_COMMITTER_EMAIL="$CORRECT_EMAIL"</span></span><br><span class="line"><span class="string">fi</span></span><br><span class="line"><span class="string">if [ "$GIT_AUTHOR_EMAIL" = "$OLD_EMAIL" ]</span></span><br><span class="line"><span class="string">then</span></span><br><span class="line"><span class="string">    export GIT_AUTHOR_NAME="$CORRECT_NAME"</span></span><br><span class="line"><span class="string">    export GIT_AUTHOR_EMAIL="$CORRECT_EMAIL"</span></span><br><span class="line"><span class="string">fi</span></span><br><span class="line"><span class="string">'</span> --tag-name-filter cat -- --branches --tags</span><br></pre></td></tr></table></figure>
+<p>git push –force –tags origin ‘refs/heads/*‘</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/git/" rel="tag"># git</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/07/18/vscode-standard-config-and-husky/" rel="prev" title="vscode standard config and husky">
+      <i class="fa fa-chevron-left"></i> vscode standard config and husky
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/07/31/access-generator-api/" rel="next" title="access-generator-api">
+      access-generator-api <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

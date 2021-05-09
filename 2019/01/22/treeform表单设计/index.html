@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、用法示例 组件调用方式 123456789101112131415Props     | Type         | use--------- | ------------ | ---------  treeData  | object|array | 业务数据来源schemaData| object       | UI形态设计(表单)onError   | function     |">
+<meta name="keywords" content="表单,treeform">
+<meta property="og:type" content="article">
+<meta property="og:title" content="treeform表单设计">
+<meta property="og:url" content="http://yoursite.com/2019/01/22/treeform表单设计/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="一、用法示例 组件调用方式 123456789101112131415Props     | Type         | use--------- | ------------ | ---------  treeData  | object|array | 业务数据来源schemaData| object       | UI形态设计(表单)onError   | function     |">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.400Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="treeform表单设计">
+<meta name="twitter:description" content="一、用法示例 组件调用方式 123456789101112131415Props     | Type         | use--------- | ------------ | ---------  treeData  | object|array | 业务数据来源schemaData| object       | UI形态设计(表单)onError   | function     |">
+
+<link rel="canonical" href="http://yoursite.com/2019/01/22/treeform表单设计/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>treeform表单设计 | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/22/treeform表单设计/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          treeform表单设计
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-01-22 14:32:01" itemprop="dateCreated datePublished" datetime="2019-01-22T14:32:01+00:00">2019-01-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tools/" itemprop="url" rel="index"><span itemprop="name">tools</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一、用法示例"><a href="#一、用法示例" class="headerlink" title="一、用法示例"></a>一、用法示例</h3><ol>
+<li><p>组件调用方式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Props     | Type         | use</span><br><span class="line">--------- | ------------ | ---------  </span><br><span class="line">treeData  | object|array | 业务数据来源</span><br><span class="line">schemaData| object       | UI形态设计(表单)</span><br><span class="line">onError   | <span class="function"><span class="keyword">function</span>     | 类型校验错误处理函数，回传错误<span class="title">info</span></span></span><br><span class="line"><span class="function"><span class="title">onChange</span>  | <span class="title">function</span>     | 回传<span class="title">treeData</span>的最新状态，业务里需要写一个<span class="title">action</span>改变<span class="title">store</span></span></span><br><span class="line"><span class="function"><span class="title">onSubmit</span>  | <span class="title">function</span>     | 回传当前提交表单下的数据</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">&lt;<span class="title">TreeForm</span></span></span><br><span class="line"><span class="function">  <span class="title">treeData</span>=</span>&#123;treeData&#125;</span><br><span class="line">  schemaData=&#123;noticeSettingSchema&#125;</span><br><span class="line">  onError=&#123;<span class="keyword">this</span>.onError&#125;</span><br><span class="line">  onChange=&#123;<span class="keyword">this</span>.onChange&#125;</span><br><span class="line">  onSubmit=&#123;<span class="keyword">this</span>.onSubmit&#125; </span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>const/notice业务的schema，主要设计的式表单相关<br>此处的设计遵循 <a href="http://json-schema.org/" target="_blank" rel="noopener">JSON schema</a><br>有2个作用 A.自动生成表单  B.利用jsonschema校验基础类型</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">showField  | Type    | use</span><br><span class="line">---------- | ------- | -----------------------------------------------  </span><br><span class="line">type       | string  | 数据的类型object|array|string </span><br><span class="line">field      | string  | UI的展示形式 [text|select|time|textarea ]</span><br><span class="line">properties | object  | object类型的表单数据组织</span><br><span class="line">title      | string  | 表单的title</span><br><span class="line">placeholder| string  | input的默认placeholder</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">validator | Type     | use</span><br><span class="line">--------- | -------- | -----------------------------------------------  </span><br><span class="line">required  | array    | 设置当前表单的必填字段</span><br><span class="line">maxItems  | number   | 超过最大长度会触发onError,不触发onSubmit</span><br><span class="line">maxLength | number   | 超过最大长度会触发onError,不触发onSubmit</span><br><span class="line">minLength | number   | 小与最小长度会触发onError,不触发onSubmit</span><br><span class="line">pattern   | <span class="built_in">RegExp</span>   | 校验数据类型，会触发onError,不触发onSubmit</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">action    | Type     | use</span><br><span class="line">--------- | -------- | ----------------------------------------------- </span><br><span class="line">canSubmit | boolean  | 表单页面是否出现submit按钮，默认<span class="literal">false</span>，不出现</span><br><span class="line">canDel    | boolean  | 当前表单列表是否允许删除，默认<span class="literal">false</span>，不删除</span><br><span class="line">canAdd    | boolean  | 当前表单列表是否允许新增，默认<span class="literal">false</span>，不新增</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> noticeSettingSchema = &#123;</span><br><span class="line">  type: <span class="string">'object'</span>,</span><br><span class="line">  field: <span class="string">'object'</span>,</span><br><span class="line">  canSubmit: <span class="literal">true</span>,</span><br><span class="line">  properties: &#123;</span><br><span class="line">    children: &#123;</span><br><span class="line">      type: <span class="string">'array'</span>,</span><br><span class="line">      field: <span class="string">'array'</span>,</span><br><span class="line">      maxItems: <span class="number">50</span>,</span><br><span class="line">      defaultItemName: <span class="string">'Notice'</span>,</span><br><span class="line">      canAdd: <span class="literal">true</span>,</span><br><span class="line">      canDel: <span class="literal">true</span>,</span><br><span class="line">      items: &#123;</span><br><span class="line">        type: <span class="string">'object'</span>,</span><br><span class="line">        field: <span class="string">'object'</span>,</span><br><span class="line">        required: [ <span class="string">'name'</span>, <span class="string">'status'</span>, <span class="string">'startTime'</span>, <span class="string">'endTime'</span>, <span class="string">'cycleType'</span>,   <span class="string">'text'</span> ],</span><br><span class="line">        properties: &#123;</span><br><span class="line">          name: &#123;</span><br><span class="line">            type: <span class="string">'string'</span>,</span><br><span class="line">            field: <span class="string">'text'</span>,</span><br><span class="line">            title: <span class="string">'Name'</span>,</span><br><span class="line">            maxLength: <span class="number">20</span>,</span><br><span class="line">            pattern: <span class="regexp">/.*\S+.*/</span></span><br><span class="line">          &#125;,</span><br><span class="line">          status: &#123;</span><br><span class="line">            type: <span class="string">'string'</span>,</span><br><span class="line">            field: <span class="string">'select'</span>,</span><br><span class="line">            title: <span class="string">'Status'</span>,</span><br><span class="line">            data: [&#123;</span><br><span class="line">              title: <span class="string">'Shown'</span>,</span><br><span class="line">              value: <span class="string">'shown'</span></span><br><span class="line">            &#125;, &#123;</span><br><span class="line">              title: <span class="string">'Hidden'</span>,</span><br><span class="line">              value: <span class="string">'hidden'</span></span><br><span class="line">            &#125;],</span><br><span class="line">            defaultValue: <span class="string">'shown'</span></span><br><span class="line">          &#125;,</span><br><span class="line">          startTime: &#123;</span><br><span class="line">            type: <span class="string">'string'</span>,</span><br><span class="line">            field: <span class="string">'time'</span>,</span><br><span class="line">            title: <span class="string">'Start Time'</span>,</span><br><span class="line">            defaultValue: <span class="string">'00:00'</span></span><br><span class="line">          &#125;,</span><br><span class="line">          endTime: &#123;</span><br><span class="line">            type: <span class="string">'string'</span>,</span><br><span class="line">            field: <span class="string">'time'</span>,</span><br><span class="line">            title: <span class="string">'End Time'</span>,</span><br><span class="line">            defaultValue: <span class="string">'23:59'</span></span><br><span class="line">          &#125;,</span><br><span class="line">          cycleType: &#123;</span><br><span class="line">            type: <span class="string">'string'</span>,</span><br><span class="line">            field: <span class="string">'select'</span>,</span><br><span class="line">            title: <span class="string">'Cycle'</span>,</span><br><span class="line">            data: [&#123;</span><br><span class="line">              title: <span class="string">'Every Day'</span>,</span><br><span class="line">              value: <span class="string">'EveryDay'</span></span><br><span class="line">            &#125;],</span><br><span class="line">            defaultValue: <span class="string">'EveryDay'</span></span><br><span class="line">          &#125;,</span><br><span class="line">          startDate: &#123;</span><br><span class="line">            type: <span class="string">'string'</span>,</span><br><span class="line">            field: <span class="string">'datePicker'</span>,</span><br><span class="line">            title: <span class="string">'Start Date'</span></span><br><span class="line">          &#125;,</span><br><span class="line">          endDate: &#123;</span><br><span class="line">            type: <span class="string">'string'</span>,</span><br><span class="line">            field: <span class="string">'datePicker'</span>,</span><br><span class="line">            title: <span class="string">'End Date'</span></span><br><span class="line">          &#125;,</span><br><span class="line">          text: &#123;</span><br><span class="line">            type: <span class="string">'string'</span>,</span><br><span class="line">            field: <span class="string">'textarea'</span>,</span><br><span class="line">            title: <span class="string">'Text'</span>,</span><br><span class="line">            maxLength: <span class="number">70</span>,</span><br><span class="line">            placeholder: <span class="string">'Please input text'</span>,</span><br><span class="line">            pattern: <span class="regexp">/.*\S+.*/</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>notice的treeData数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">showField  | Type                | use</span><br><span class="line">---------- | ------------------- | ----------------------------------------  </span><br><span class="line">id         | string              | 必填，节点的唯一标识 </span><br><span class="line">name       | string              | 必填，节点的展示标识</span><br><span class="line">toggled    | boolean             | 树节点是否展开，<span class="literal">true</span>为展开，<span class="literal">false</span>为关闭(默认)</span><br><span class="line">active     | boolean             | 展示的当前节点，对应节点的object的active为<span class="literal">true</span></span><br><span class="line">childrenKey| string              | 当前树子节点的key</span><br><span class="line">data       | array|object|string | 当前数据为array时候，组件会自动增加childrenKey</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  id: <span class="number">0</span>,</span><br><span class="line">  name: <span class="string">'notice'</span>,</span><br><span class="line">  toggled: <span class="literal">true</span>,</span><br><span class="line">  children: [&#123;</span><br><span class="line">      name: <span class="string">"Notice 8"</span>,</span><br><span class="line">      status: <span class="string">"shown"</span>,</span><br><span class="line">      start_time : <span class="string">"00:00"</span>,</span><br><span class="line">      end_time : <span class="string">"23:59"</span>,</span><br><span class="line">      start_date : <span class="string">""</span>,</span><br><span class="line">      end_date : <span class="string">""</span>,</span><br><span class="line">      text : <span class="string">" 35"</span>,</span><br><span class="line">      cycle_type : <span class="string">"EveryDay"</span>,</span><br><span class="line">      create_time : <span class="string">"2019-01-22 13:55"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      name : <span class="string">"Notice 7"</span>,</span><br><span class="line">      status : <span class="string">"shown"</span>,</span><br><span class="line">      start_time : <span class="string">"00:00"</span>,</span><br><span class="line">      end_time : <span class="string">"23:59"</span>,</span><br><span class="line">      start_date : <span class="string">""</span>,</span><br><span class="line">      end_date : <span class="string">""</span>,</span><br><span class="line">      text : <span class="string">" grge"</span>,</span><br><span class="line">      cycle_type : <span class="string">"EveryDay"</span>,</span><br><span class="line">      create_time : <span class="string">"2019-01-22 13:55"</span></span><br><span class="line">  &#125;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><a href="dp-admin.test.xxxxx.io/id/notice/detail/1">notice demo访问地址</a></p>
+</li>
+</ol>
+<h3 id="二、实现思路"><a href="#二、实现思路" class="headerlink" title="二、实现思路"></a>二、实现思路</h3><p><a href="https://www.processon.com/view/link/5c47069ae4b03334b50c3f34" target="_blank" rel="noopener">实现思路流程图</a></p>
+<h3 id="三、待优化部分"><a href="#三、待优化部分" class="headerlink" title="三、待优化部分"></a>三、待优化部分</h3><ol>
+<li><p>id和name的设计</p>
+</li>
+<li><p>数据同步问题</p>
+</li>
+<li><p>关键函数的实现</p>
+</li>
+</ol>
+<h3 id="四、问题"><a href="#四、问题" class="headerlink" title="四、问题"></a>四、问题</h3><p>1.某某这个页面需要填写用户信息？</p>
+<p>这几个输入框能填写正常信息就行</p>
+<p>2.so easy？</p>
+<p>Bug太磨人，这个光标，这个键盘，那个校验</p>
+<p>3.听说你解过这个bug，我的邮箱校验好像漏了个啥</p>
+<p>抄作业</p>
+<p>🈶️</p>
+<p>4.奋发图强，做一个通用方案，不让同事在踩坑？</p>
+<p>sniper ota和nearby里的@comp/Common/DataEntry/Form</p>
+<p>Windrunner </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/表单/" rel="tag"># 表单</a>
+              <a href="/tags/treeform/" rel="tag"># treeform</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/12/14/commitzen的使用/" rel="prev" title="commitzen的使用">
+      <i class="fa fa-chevron-left"></i> commitzen的使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/08/17/react读书笔记/" rel="next" title="react读书笔记">
+      react读书笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、用法示例"><span class="nav-number">1.</span> <span class="nav-text">一、用法示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、实现思路"><span class="nav-number">2.</span> <span class="nav-text">二、实现思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、待优化部分"><span class="nav-number">3.</span> <span class="nav-text">三、待优化部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、问题"><span class="nav-number">4.</span> <span class="nav-text">四、问题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

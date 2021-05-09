@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="背景参考ant-pro 替换roadhog为webpack 一、替换步骤概览（what）1234567891. 添加meepjs相关loader webpack配置2. 新建apis文件配置yml文件，删除service/api模块3. 新建store|reducer模块、删除model模块4. 新建页面Loadable加载、删除dva/dynamic的创建方式5. page里面引入reac">
+<meta name="keywords" content="admin,dva,redux,yml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ant-pro替换-dva框架">
+<meta property="og:url" content="http://yoursite.com/2018/11/16/ant-pro替换-dva框架/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="背景参考ant-pro 替换roadhog为webpack 一、替换步骤概览（what）1234567891. 添加meepjs相关loader webpack配置2. 新建apis文件配置yml文件，删除service/api模块3. 新建store|reducer模块、删除model模块4. 新建页面Loadable加载、删除dva/dynamic的创建方式5. page里面引入reac">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ant-pro替换-dva框架">
+<meta name="twitter:description" content="背景参考ant-pro 替换roadhog为webpack 一、替换步骤概览（what）1234567891. 添加meepjs相关loader webpack配置2. 新建apis文件配置yml文件，删除service/api模块3. 新建store|reducer模块、删除model模块4. 新建页面Loadable加载、删除dva/dynamic的创建方式5. page里面引入reac">
+
+<link rel="canonical" href="http://yoursite.com/2018/11/16/ant-pro替换-dva框架/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>ant-pro替换-dva框架 | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/16/ant-pro替换-dva框架/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ant-pro替换-dva框架
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-11-16 16:39:24" itemprop="dateCreated datePublished" datetime="2018-11-16T16:39:24+00:00">2018-11-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/xxxxx/" itemprop="url" rel="index"><span itemprop="name">xxxxx</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>背景参考<a href="https://weiqian93.github.io/2018/11/16/ant-pro-%E6%9B%BF%E6%8D%A2roadhog%E4%B8%BAwebpack/" target="_blank" rel="noopener">ant-pro 替换roadhog为webpack</a></p>
+<h3 id="一、替换步骤概览（what）"><a href="#一、替换步骤概览（what）" class="headerlink" title="一、替换步骤概览（what）"></a>一、替换步骤概览（what）</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 添加meepjs相关loader webpack配置</span><br><span class="line"><span class="number">2.</span> 新建apis文件配置yml文件，删除service/api模块</span><br><span class="line"><span class="number">3.</span> 新建store|reducer模块、删除model模块</span><br><span class="line"><span class="number">4.</span> 新建页面Loadable加载、删除dva/dynamic的创建方式</span><br><span class="line"><span class="number">5.</span> page里面引入react-redux的connent、删除dva的connect</span><br><span class="line"><span class="number">6.</span> 结合yml引入新的error模块，删除原有的error模块</span><br><span class="line"><span class="number">7.</span> selector重新写一下，util和helper模块规划的更细一些</span><br><span class="line"><span class="number">8.</span> 重新替换上自己的layout布局</span><br><span class="line"><span class="number">9.</span> 新增mock、i18n（这<span class="number">2</span>个模块作用现在不是很大，为了后面提取更完善的框架，先把这些标配的东西放进去）</span><br></pre></td></tr></table></figure>
+<h3 id="二、为什么要做替换呢-why"><a href="#二、为什么要做替换呢-why" class="headerlink" title="二、为什么要做替换呢(why)"></a>二、为什么要做替换呢(why)</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> dva的框架和现在有sniper的框架有一些差距，很容易走到一个人的小圈子，不够开放，不能及时更新同步新的东西</span><br><span class="line"><span class="number">2.</span> 代码的可读性没有sniper高，sniper模块就很繁琐强迫证一样，但也使的代码的可读性更好</span><br><span class="line"><span class="number">3.</span> 我们做自己的脚手架，从打包到ui最终都尽量用自己的东西，更好掌控一些，这样就一定要去掉这些别人家的轮子，做自家轮子</span><br><span class="line"><span class="number">4.</span> 把这些模块慢慢替换掉后，就可以慢慢打磨代码，从线上代码很快提取手架的，相互磨合改造的一个过程。</span><br></pre></td></tr></table></figure>
+<h3 id="三、首次迁移的遗留问题"><a href="#三、首次迁移的遗留问题" class="headerlink" title="三、首次迁移的遗留问题"></a>三、首次迁移的遗留问题</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> reducer的模块多繁琐，代码都差不多，如何精简</span><br><span class="line"><span class="number">2.</span> 关于数据的处理，有时候时在action 有时候时在saga，这里有没有更好的规范</span><br><span class="line"><span class="number">3.</span> 各个组件之间的loading和全局的loading组织关系，怎么优雅组织代码</span><br></pre></td></tr></table></figure>
+<h3 id="四、dva替换部分具体细节"><a href="#四、dva替换部分具体细节" class="headerlink" title="四、dva替换部分具体细节"></a>四、dva替换部分具体细节</h3><ol>
+<li><p>添加meepjs相关loader webpack配置 </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.base.conf.js</span></span><br><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">   noParse: [<span class="regexp">/\.min\.js$/</span>],</span><br><span class="line">   rules: [</span><br><span class="line">     &#123;</span><br><span class="line">       test: <span class="regexp">/\.yml$/</span>,</span><br><span class="line">       use: [</span><br><span class="line">         &#123; <span class="attr">loader</span>: <span class="built_in">require</span>.resolve(<span class="string">'meepojs-loader'</span>) &#125;</span><br><span class="line">       ]</span><br><span class="line">     &#125;</span><br><span class="line">   ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>新建apis文件配置yml文件，删除service/api模块<br>src/apis/banner.yml</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">apis:</span><br><span class="line">  fetchBannerGroup:</span><br><span class="line">    url: <span class="regexp">/api/</span>banner/group</span><br><span class="line">    options:</span><br><span class="line">      method: GET</span><br><span class="line">      timeout: <span class="number">6000</span></span><br><span class="line">    needs:</span><br><span class="line">     group_id: number</span><br><span class="line"></span><br><span class="line">  saveBannerGroup:</span><br><span class="line">    url: <span class="regexp">/api/</span>banner/save</span><br><span class="line">    options:</span><br><span class="line">      method: POST</span><br><span class="line">      timeout: <span class="number">6000</span></span><br><span class="line">    needs:</span><br><span class="line">      images: array</span><br><span class="line">      group_id: number</span><br><span class="line">      group_name: string</span><br><span class="line"></span><br><span class="line">config:</span><br><span class="line">  meta:</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>src/apis/index.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">'./init.js'</span></span><br><span class="line"><span class="keyword">import</span> &#123; registerApi &#125; <span class="keyword">from</span> <span class="string">'meepojs'</span></span><br><span class="line"><span class="keyword">import</span> bannerApiConf <span class="keyword">from</span> <span class="string">'./banner.yml'</span></span><br><span class="line"><span class="keyword">import</span> &#123; memoizeAsync, hashObj &#125; <span class="keyword">from</span> <span class="string">'@utils/memoize'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> registerApis = <span class="function"><span class="params">apiConfObj</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> apiMap = &#123;&#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> name <span class="keyword">in</span> apiConfObj) &#123;</span><br><span class="line">    apiConfObj[name].url = apiConfObj[name].url.replace(<span class="string">'/api'</span>, <span class="string">'/api/id'</span>)</span><br><span class="line">    apiMap[name] = <span class="function"><span class="params">params</span> =&gt;</span></span><br><span class="line">      (memoizeAsync(</span><br><span class="line">        registerApi(apiConfObj[name]),</span><br><span class="line">        (&#123; query, body, params &#125;) =&gt; apiConfObj[name].url + hashObj(query) + hashObj(params) + hashObj(body)</span><br><span class="line">      ))(params, apiConfObj[name].meta)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> apiMap</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> bannerApi = registerApis(bannerApiConf)</span><br></pre></td></tr></table></figure></p>
+<p>src/apis/init.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; notification &#125; <span class="keyword">from</span> <span class="string">'antd'</span></span><br><span class="line"><span class="keyword">import</span> &#123; accountLogin &#125; <span class="keyword">from</span> <span class="string">'@utils/authority'</span></span><br><span class="line"><span class="keyword">import</span> &#123; clearLoginSession &#125; <span class="keyword">from</span> <span class="string">'@helper/login'</span></span><br><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  configDefaultFetchOptions,</span><br><span class="line">  registerApiSuccChecker,</span><br><span class="line">  onHttpError,</span><br><span class="line">  onApiError</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">'meepojs'</span></span><br><span class="line"></span><br><span class="line">configDefaultFetchOptions(&#123;</span><br><span class="line">  credentials: <span class="string">'include'</span>,</span><br><span class="line">  prefix: <span class="string">''</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">registerApiSuccChecker(</span><br><span class="line">  (&#123; body, status &#125;) =&gt; body.err_code === <span class="number">0</span> &amp;&amp; status === <span class="number">200</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">onHttpError(<span class="function">(<span class="params">&#123; status, apiConfig &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!apiConfig.meta.showError) <span class="keyword">return</span></span><br><span class="line">  <span class="keyword">if</span> (status === <span class="number">404</span>) &#123;</span><br><span class="line">    <span class="built_in">window</span>.location.href = <span class="string">'/error/404'</span></span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (status &gt;= <span class="number">500</span> &amp;&amp; status &lt; <span class="number">600</span>) &#123;</span><br><span class="line">    <span class="built_in">window</span>.location.href = <span class="string">`/error/<span class="subst">$&#123;status&#125;</span>`</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">onApiError(<span class="function">(<span class="params">&#123; body, status, apiConfig &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (body.err_code !== <span class="number">0</span>) &#123;</span><br><span class="line">    notification.error(&#123;</span><br><span class="line">      message: <span class="string">`Request Error <span class="subst">$&#123;body.err_code&#125;</span>: <span class="subst">$&#123;body.err_msg&#125;</span>`</span>,</span><br><span class="line">      description: body.err_msg</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">if</span> (body.err_code === <span class="number">31</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">window</span>.alert(body.err_code)</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (body.err_code === <span class="number">32</span>) &#123;</span><br><span class="line">      clearLoginSession()</span><br><span class="line">      accountLogin()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>src/utils/momoize.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> hashObj = <span class="function"><span class="params">obj</span> =&gt;</span></span><br><span class="line">  obj ? <span class="built_in">Object</span>.keys(obj).map(<span class="function"><span class="params">key</span> =&gt;</span> <span class="string">`<span class="subst">$&#123;key&#125;</span>=<span class="subst">$&#123;obj[key]&#125;</span>`</span>).join(<span class="string">'&amp;'</span>)</span><br><span class="line">    : <span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> MAX_CACHE_SIZE = <span class="number">1000</span></span><br><span class="line"><span class="keyword">const</span> DEFAULT_OPTIONS = &#123;</span><br><span class="line">  isFlush: <span class="literal">false</span>,</span><br><span class="line">  expiry: <span class="number">1000</span> * <span class="number">60</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> cache = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> memoizeAsync = <span class="function">(<span class="params">func, keyCreator = hashObj</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> that = <span class="keyword">this</span></span><br><span class="line">  <span class="keyword">const</span> setCache = <span class="function">(<span class="params">key, data</span>) =&gt;</span> &#123;</span><br><span class="line">    cache[key] = &#123;</span><br><span class="line">      data,</span><br><span class="line">      updateTime: <span class="built_in">Date</span>.now()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> (<span class="params">params, opt</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> key = keyCreator(params)</span><br><span class="line">    <span class="keyword">const</span> options = <span class="built_in">Object</span>.assign(&#123;&#125;, DEFAULT_OPTIONS, opt)</span><br><span class="line">    <span class="keyword">const</span> &#123; isFlush, expiry &#125; = options</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> result</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Object</span>.keys(cache).length &gt; MAX_CACHE_SIZE) cache = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (isFlush || !cache[key] || cache[key].updateTime + expiry &lt; <span class="built_in">Date</span>.now()) &#123;</span><br><span class="line">      result = <span class="keyword">await</span> func.call(that, params)</span><br><span class="line">      setCache(key, result)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      result = cache[key].data</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(result)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol start="3">
+<li>新建store|reducer模块、删除model模块<br>src/store.js<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createStore, applyMiddleware, combineReducers &#125; <span class="keyword">from</span> <span class="string">'redux'</span></span><br><span class="line"><span class="keyword">import</span> createHistory <span class="keyword">from</span> <span class="string">'history/createBrowserHistory'</span></span><br><span class="line"><span class="keyword">import</span> createSagaMiddleware <span class="keyword">from</span> <span class="string">'redux-saga'</span></span><br><span class="line"><span class="keyword">import</span> logger <span class="keyword">from</span> <span class="string">'redux-logger'</span></span><br><span class="line"><span class="keyword">import</span> &#123; routerReducer, routerMiddleware &#125; <span class="keyword">from</span> <span class="string">'react-router-redux'</span></span><br><span class="line"><span class="keyword">import</span> &#123; reducers, sagas &#125; <span class="keyword">from</span> <span class="string">'./reducers'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> history = createHistory(&#123;&#125;)</span><br><span class="line"><span class="keyword">const</span> _routerMiddleware = routerMiddleware(history)</span><br><span class="line"><span class="keyword">const</span> sagaMiddleware = createSagaMiddleware()</span><br><span class="line"><span class="keyword">const</span> middlewares = [sagaMiddleware, _routerMiddleware, logger]</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> store = createStore(</span><br><span class="line">  combineReducers(&#123;</span><br><span class="line">    ...reducers,</span><br><span class="line">    router: routerReducer</span><br><span class="line">  &#125;),</span><br><span class="line">  applyMiddleware(...middlewares)</span><br><span class="line">)</span><br><span class="line">sagaMiddleware.run(sagas)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> store</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>src/reducer/banner/fetch.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createActions &#125; <span class="keyword">from</span> <span class="string">'redux-actions'</span></span><br><span class="line"><span class="keyword">import</span> &#123; takeLatest, call, put &#125; <span class="keyword">from</span> <span class="string">'redux-saga/effects'</span></span><br><span class="line"><span class="keyword">import</span> &#123; bannerApi &#125; <span class="keyword">from</span> <span class="string">'@apis/index.js'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> &#123;</span><br><span class="line">  fetchBannerGroupReq,</span><br><span class="line">  fetchBannerGroupSucc,</span><br><span class="line">  fetchBannerGroupFailed</span><br><span class="line">&#125; = createActions(&#123;</span><br><span class="line">  FETCH_BANNER_GROUP_REQ: <span class="literal">null</span>,</span><br><span class="line">  FETCH_BANNER_GROUP_SUCC: <span class="function">(<span class="params">rsp</span>) =&gt;</span> (&#123; <span class="attr">banner</span>: rsp &#125;),</span><br><span class="line">  FETCH_BANNER_GROUP_FAILED: <span class="literal">null</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> * <span class="title">fetchBannerGroupReqSaga</span> (<span class="params">&#123; payload &#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; groupId, callback &#125; = payload</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> rsp = <span class="keyword">yield</span> call(bannerApi.fetchBannerGroup, &#123;</span><br><span class="line">      query: &#123;</span><br><span class="line">        group_id: groupId</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    rsp.data = <span class="function">(<span class="params">rsp.data || []</span>).<span class="params">map</span>(<span class="params">(item, idx</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        key: idx + <span class="number">1</span>,</span><br><span class="line">        name: item.name,</span><br><span class="line">        banner_link: item.location,</span><br><span class="line">        redirect_url: item.url,</span><br><span class="line">        start_time: item.start_time,</span><br><span class="line">        end_time: item.end_time</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">yield</span> put(fetchBannerGroupSucc(rsp.data))</span><br><span class="line">    <span class="keyword">if</span> (callback) &#123;</span><br><span class="line">      callback(rsp.data)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">yield</span> put(fetchBannerGroupFailed())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> * <span class="title">watchFetchBannerGroup</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> takeLatest(fetchBannerGroupReq, fetchBannerGroupReqSaga)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/****************************************************************************</span></span><br><span class="line"><span class="comment"> *                        saveBannerGroup</span></span><br><span class="line"><span class="comment"> ****************************************************************************/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> &#123;</span><br><span class="line">  saveBannerGroupReq,</span><br><span class="line">  saveBannerGroupSucc,</span><br><span class="line">  saveBannerGroupFailed</span><br><span class="line">&#125; = createActions(&#123;</span><br><span class="line">  SAVE_BANNER_GROUP_REQ: <span class="literal">null</span>,</span><br><span class="line">  SAVE_BANNER_GROUP_SUCC: <span class="function">(<span class="params">rsp</span>) =&gt;</span> (&#123; <span class="attr">banner</span>: rsp &#125;),</span><br><span class="line">  SAVE_BANNER_GROUP_FAILED: <span class="literal">null</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> * <span class="title">saveBannerGroupReqSaga</span> (<span class="params">&#123; payload &#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> rsp = <span class="keyword">yield</span> call(bannerApi.saveBannerGroup, &#123;</span><br><span class="line">      body: payload</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">yield</span> put(saveBannerGroupSucc(rsp.data))</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> payload.callback === <span class="string">'function'</span>) &#123;</span><br><span class="line">      payload.callback(rsp.data)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(err)</span><br><span class="line">    <span class="keyword">yield</span> put(saveBannerGroupFailed())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> * <span class="title">watchSaveBannerGroup</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> takeLatest(saveBannerGroupReq, saveBannerGroupReqSaga)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/****************************************************************************</span></span><br><span class="line"><span class="comment"> *                        watchFetch</span></span><br><span class="line"><span class="comment"> ****************************************************************************/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> watchFetch = [ watchFetchBannerGroup, watchSaveBannerGroup ]</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  [fetchBannerGroupSucc]: <span class="function">(<span class="params">state, &#123; payload: &#123; banner &#125; &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      ...state</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  [fetchBannerGroupFailed]: <span class="function"><span class="params">state</span> =&gt;</span> (&#123;</span><br><span class="line">    ...state,</span><br><span class="line">    isError: <span class="literal">true</span></span><br><span class="line">  &#125;),</span><br><span class="line">  [saveBannerGroupSucc]: <span class="function">(<span class="params">state, &#123; payload: &#123; banner &#125; &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      ...state</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  [saveBannerGroupFailed]: <span class="function"><span class="params">state</span> =&gt;</span> (&#123;</span><br><span class="line">    ...state,</span><br><span class="line">    isError: <span class="literal">true</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>src/reducer/banner/index.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; handleActions &#125; <span class="keyword">from</span> <span class="string">'redux-actions'</span></span><br><span class="line"><span class="keyword">import</span> fetchReducer, &#123; watchFetch &#125; <span class="keyword">from</span> <span class="string">'./fetch'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> watchBannerSagas = [</span><br><span class="line">  ...watchFetch</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> handleActions(fetchReducer, &#123;&#125;)</span><br></pre></td></tr></table></figure></p>
+<ol start="4">
+<li>新建页面Loadable加载、删除dva/dynamic的创建方式<br>src/index.js<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span></span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">'react-dom'</span></span><br><span class="line"><span class="keyword">import</span> &#123; Provider &#125; <span class="keyword">from</span> <span class="string">'react-redux'</span></span><br><span class="line"><span class="keyword">import</span> &#123; ConnectedRouter &#125; <span class="keyword">from</span> <span class="string">'react-router-redux'</span></span><br><span class="line"><span class="keyword">import</span> BasicLayout <span class="keyword">from</span> <span class="string">'@layouts/BasicLayout'</span></span><br><span class="line"><span class="keyword">import</span> createHistory <span class="keyword">from</span> <span class="string">'history/createBrowserHistory'</span></span><br><span class="line"><span class="keyword">import</span> &#123; setCountry &#125; <span class="keyword">from</span> <span class="string">'@utils/utils'</span></span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">'./store'</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.less'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> country = <span class="string">'id'</span></span><br><span class="line">  country = <span class="built_in">window</span>.location.pathname.split(<span class="string">'/'</span>)[<span class="number">1</span>]</span><br><span class="line">  setCountry(country)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> history = createHistory(&#123; <span class="attr">basename</span>: <span class="string">'/'</span> + (country || <span class="string">'id'</span>) &#125;)</span><br><span class="line"></span><br><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">    &lt;ConnectedRouter history=&#123;history&#125;&gt;</span><br><span class="line">      &lt;BasicLayout /&gt;</span><br><span class="line">    &lt;<span class="regexp">/ConnectedRouter &gt;</span></span><br><span class="line"><span class="regexp">  &lt;/</span>Provider&gt;,</span><br><span class="line">  <span class="built_in">document</span>.getElementById(<span class="string">'root'</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>src/layout/BasicLayout.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span></span><br><span class="line"><span class="keyword">import</span> &#123; Layout &#125; <span class="keyword">from</span> <span class="string">'antd'</span></span><br><span class="line"><span class="keyword">import</span> &#123; Route, Redirect, Switch &#125; <span class="keyword">from</span> <span class="string">'dva/router'</span></span><br><span class="line"><span class="keyword">import</span> &#123; ContainerQuery &#125; <span class="keyword">from</span> <span class="string">'react-container-query'</span></span><br><span class="line"><span class="keyword">import</span> &#123; routerData &#125; <span class="keyword">from</span> <span class="string">'@common/menu'</span></span><br><span class="line"><span class="keyword">import</span> &#123; setCountry &#125; <span class="keyword">from</span> <span class="string">'@utils/utils'</span></span><br><span class="line"><span class="keyword">import</span> &#123; accountLogout &#125; <span class="keyword">from</span> <span class="string">'@utils/authority.js'</span></span><br><span class="line"><span class="keyword">import</span> Loading <span class="keyword">from</span> <span class="string">'@comp/Loading'</span></span><br><span class="line"><span class="keyword">import</span> Loadable <span class="keyword">from</span> <span class="string">'react-loadable'</span></span><br><span class="line"><span class="keyword">import</span> &#123; layoutData &#125; <span class="keyword">from</span> <span class="string">'@common/default'</span></span><br><span class="line"><span class="keyword">import</span> DocumentTitle <span class="keyword">from</span> <span class="string">'react-document-title'</span></span><br><span class="line"><span class="keyword">import</span> classNames <span class="keyword">from</span> <span class="string">'classnames'</span></span><br><span class="line"><span class="keyword">import</span> GlobalHeader <span class="keyword">from</span> <span class="string">'@comp/GlobalHeader'</span></span><br><span class="line"><span class="keyword">import</span> SiderMenu <span class="keyword">from</span> <span class="string">'@comp/SiderMenu/index.js'</span></span><br><span class="line"><span class="keyword">import</span> NotFound <span class="keyword">from</span> <span class="string">'@pages/Exception/500'</span></span><br><span class="line"><span class="keyword">import</span> logo <span class="keyword">from</span> <span class="string">'@assets/favicon.jpg'</span></span><br><span class="line"><span class="keyword">const</span> &#123; Content, Header, Footer &#125; = Layout</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> genOptions = <span class="function">(<span class="params">loader</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Object</span>.assign(&#123;</span><br><span class="line">    loading: Loading</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    loader</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BasicLayout</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">PureComponent</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span> (props) &#123;</span><br><span class="line">    <span class="keyword">super</span>(props)</span><br><span class="line">    <span class="keyword">this</span>.state = &#123;</span><br><span class="line">      collapsed: <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.routerConfig = routerData.map(<span class="function">(<span class="params">item, index</span>) =&gt;</span> (</span><br><span class="line">      (</span><br><span class="line">        &lt;Route</span><br><span class="line">          key=&#123;index&#125;</span><br><span class="line">          path=&#123;item.path&#125;</span><br><span class="line">          title=&#123;item.name&#125;</span><br><span class="line">          component=&#123;Loadable(genOptions(<span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'@pages/'</span> + item.component)))&#125;</span><br><span class="line">        /&gt;</span><br><span class="line">      )</span><br><span class="line">    ))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  handleMenuCollapse = <span class="function"><span class="params">collapsed</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">      collapsed: !<span class="keyword">this</span>.state.collapsed</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  handleMenuClick = <span class="function">(<span class="params">&#123; key &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (key === <span class="string">'logout'</span>) &#123;</span><br><span class="line">      accountLogout()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  handleCountryClick = <span class="function">(<span class="params">key</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`selected <span class="subst">$&#123;key&#125;</span>`</span>)</span><br><span class="line">    setCountry(key)</span><br><span class="line">    <span class="built_in">window</span>.location = <span class="built_in">window</span>.location.origin + <span class="string">'/'</span> + key</span><br><span class="line">  &#125;</span><br><span class="line">  render () &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; collapsed &#125; = <span class="keyword">this</span>.state</span><br><span class="line">    <span class="keyword">const</span> layout = (</span><br><span class="line">      &lt;Layout&gt;</span><br><span class="line">        &lt;SiderMenu</span><br><span class="line">          collapsed=&#123;collapsed&#125;</span><br><span class="line">          isMobile=&#123;<span class="keyword">this</span>.state.isMobile&#125;</span><br><span class="line">          onCollapse=&#123;<span class="keyword">this</span>.handleMenuCollapse&#125;</span><br><span class="line">        /&gt;</span><br><span class="line">        &lt;Layout&gt;</span><br><span class="line">          &#123; &lt;Header style=&#123;&#123; <span class="attr">padding</span>: <span class="number">0</span> &#125;&#125;&gt;</span><br><span class="line">            &lt;GlobalHeader</span><br><span class="line">              logo=&#123;logo&#125;</span><br><span class="line">              collapsed=&#123;collapsed&#125;</span><br><span class="line">              isMobile=&#123;<span class="keyword">this</span>.state.isMobile&#125;</span><br><span class="line">              onCountryClick=&#123;<span class="keyword">this</span>.handleCountryClick&#125;</span><br><span class="line">              onMenuClick=&#123;<span class="keyword">this</span>.handleMenuClick&#125;</span><br><span class="line">              onCollapse=&#123;<span class="keyword">this</span>.handleMenuCollapse&#125;</span><br><span class="line">            /&gt;</span><br><span class="line">          &lt;<span class="regexp">/Header&gt; &#125;</span></span><br><span class="line"><span class="regexp">          &lt;Content style=&#123;&#123; margin: '24px 24px 0', height: '100%' &#125;&#125;&gt;</span></span><br><span class="line"><span class="regexp">            &lt;Switch&gt;</span></span><br><span class="line"><span class="regexp">              &#123; this.routerConfig &#125;</span></span><br><span class="line"><span class="regexp">              &lt;Redirect exact from='/</span><span class="string">' to='</span>order/list<span class="string">' /&gt;</span></span><br><span class="line"><span class="string">              &lt;Route render=&#123;NotFound&#125; /&gt;</span></span><br><span class="line"><span class="string">            &lt;/Switch&gt;</span></span><br><span class="line"><span class="string">          &lt;/Content&gt;</span></span><br><span class="line"><span class="string">          &lt;Footer style=&#123;&#123; padding: 0 &#125;&#125; /&gt;</span></span><br><span class="line"><span class="string">        &lt;/Layout&gt;</span></span><br><span class="line"><span class="string">      &lt;/Layout&gt;</span></span><br><span class="line"><span class="string">    )</span></span><br><span class="line"><span class="string">    return (</span></span><br><span class="line"><span class="string">      &lt;DocumentTitle title=&#123;layoutData.docTitle&#125;&gt;</span></span><br><span class="line"><span class="string">        &lt;ContainerQuery query=&#123;layoutData.query&#125;&gt;</span></span><br><span class="line"><span class="string">          &#123;params =&gt; &lt;div className=&#123;classNames(params)&#125;&gt;&#123;layout&#125;&lt;/div&gt;&#125;</span></span><br><span class="line"><span class="string">        &lt;/ContainerQuery&gt;</span></span><br><span class="line"><span class="string">      &lt;/DocumentTitle&gt;</span></span><br><span class="line"><span class="string">    )</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">export default BasicLayout</span></span><br></pre></td></tr></table></figure></p>
+<ol start="5">
+<li>page里面引入react-redux的connent、删除dva的connect<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span></span><br><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">'react-redux'</span></span><br><span class="line"><span class="keyword">import</span> &#123; bindActionCreators &#125; <span class="keyword">from</span> <span class="string">'redux'</span></span><br><span class="line"><span class="keyword">import</span> PageHeaderLayout <span class="keyword">from</span> <span class="string">'@layouts/PageHeaderLayout'</span></span><br><span class="line"><span class="keyword">import</span> &#123; fetchOrderDetailReq &#125; <span class="keyword">from</span> <span class="string">'@reducers/order/fetch'</span></span><br><span class="line"><span class="keyword">import</span> &#123; fetchRefundDetailReq &#125; <span class="keyword">from</span> <span class="string">'@reducers/refund/fetch'</span></span><br><span class="line"><span class="keyword">import</span> &#123; createCardDescriptList &#125; <span class="keyword">from</span> <span class="string">'@utils/utils'</span></span><br><span class="line"><span class="keyword">import</span> &#123; refundDetailSelector, orderDetailSelector &#125; <span class="keyword">from</span> <span class="string">'@selector/index'</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RefundDetail</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  componentDidMount () &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; <span class="attr">location</span>: &#123; pathname &#125; &#125; = <span class="keyword">this</span>.props</span><br><span class="line">    <span class="keyword">const</span> urlparam = pathname.split(<span class="string">'/'</span>)[<span class="number">3</span>].split(<span class="string">'_'</span>)</span><br><span class="line">    <span class="keyword">const</span> param = &#123;</span><br><span class="line">      order_id: urlparam[<span class="number">0</span>],</span><br><span class="line">      user_id: urlparam[<span class="number">1</span>] * <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.props.fetchOrderDetailReq(param)</span><br><span class="line">    <span class="keyword">this</span>.props.fetchRefundDetailReq(param)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render () &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; refund, order &#125; = <span class="keyword">this</span>.props</span><br><span class="line">    <span class="keyword">const</span> refundProfile = refundDetailSelector(refund.detail)</span><br><span class="line">    <span class="keyword">const</span> refundDetail = createCardDescriptList(refundProfile, <span class="string">'Refund Detail'</span>)</span><br><span class="line">    <span class="keyword">const</span> orderProfile = orderDetailSelector(order.detail)</span><br><span class="line">    <span class="keyword">const</span> orderDetail = createCardDescriptList(orderProfile, <span class="string">'Order Detail'</span>)</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;PageHeaderLayout&gt;</span><br><span class="line">        &#123; refundDetail &#125;</span><br><span class="line">        &#123; orderDetail &#125;</span><br><span class="line">      &lt;<span class="regexp">/PageHeaderLayout&gt;</span></span><br><span class="line"><span class="regexp">    )</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">const mapStateToProps = state =&gt; &#123;</span></span><br><span class="line"><span class="regexp">  return &#123;</span></span><br><span class="line"><span class="regexp">    ...state</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">const mapDispatchToProps = dispatch =&gt; bindActionCreators(&#123;</span></span><br><span class="line"><span class="regexp">  fetchOrderDetailReq,</span></span><br><span class="line"><span class="regexp">  fetchRefundDetailReq</span></span><br><span class="line"><span class="regexp">&#125;, dispatch)</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default connect(mapStateToProps, mapDispatchToProps)(RefundDetail)</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/admin/" rel="tag"># admin</a>
+              <a href="/tags/dva/" rel="tag"># dva</a>
+              <a href="/tags/redux/" rel="tag"># redux</a>
+              <a href="/tags/yml/" rel="tag"># yml</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/11/16/ant-pro-替换roadhog为webpack/" rel="prev" title="ant-pro 替换roadhog为webpack">
+      <i class="fa fa-chevron-left"></i> ant-pro 替换roadhog为webpack
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/12/13/一个npm包引起的bug/" rel="next" title="一个npm包引起的小bug">
+      一个npm包引起的小bug <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、替换步骤概览（what）"><span class="nav-number">1.</span> <span class="nav-text">一、替换步骤概览（what）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、为什么要做替换呢-why"><span class="nav-number">2.</span> <span class="nav-text">二、为什么要做替换呢(why)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、首次迁移的遗留问题"><span class="nav-number">3.</span> <span class="nav-text">三、首次迁移的遗留问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、dva替换部分具体细节"><span class="nav-number">4.</span> <span class="nav-text">四、dva替换部分具体细节</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

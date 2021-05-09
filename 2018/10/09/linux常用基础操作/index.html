@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="liunx有很多优秀的地方，用了mac后确实再也不想用windows了，简单记录下工作日常需要了解的一些基础知识。 一、文件权限和目录 多用户、多任务环境，文件可存取访问的身份owner|group|other，3种身份各有read4r|write2w|execute1x 123456789➜  man ls  // 详细的命令➜  info ls ➜  ll // 文件权限|连接数|文件所属者|">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux常用基础操作">
+<meta property="og:url" content="http://yoursite.com/2018/10/09/linux常用基础操作/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="liunx有很多优秀的地方，用了mac后确实再也不想用windows了，简单记录下工作日常需要了解的一些基础知识。 一、文件权限和目录 多用户、多任务环境，文件可存取访问的身份owner|group|other，3种身份各有read4r|write2w|execute1x 123456789➜  man ls  // 详细的命令➜  info ls ➜  ll // 文件权限|连接数|文件所属者|">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux常用基础操作">
+<meta name="twitter:description" content="liunx有很多优秀的地方，用了mac后确实再也不想用windows了，简单记录下工作日常需要了解的一些基础知识。 一、文件权限和目录 多用户、多任务环境，文件可存取访问的身份owner|group|other，3种身份各有read4r|write2w|execute1x 123456789➜  man ls  // 详细的命令➜  info ls ➜  ll // 文件权限|连接数|文件所属者|">
+
+<link rel="canonical" href="http://yoursite.com/2018/10/09/linux常用基础操作/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>linux常用基础操作 | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/09/linux常用基础操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          linux常用基础操作
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-10-09 20:57:58" itemprop="dateCreated datePublished" datetime="2018-10-09T20:57:58+00:00">2018-10-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tools/" itemprop="url" rel="index"><span itemprop="name">tools</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>liunx有很多优秀的地方，用了mac后确实再也不想用windows了，简单记录下工作日常需要了解的一些基础知识。</p>
+<h3 id="一、文件权限和目录"><a href="#一、文件权限和目录" class="headerlink" title="一、文件权限和目录"></a>一、文件权限和目录</h3><ol>
+<li><p>多用户、多任务环境，文件可存取访问的身份owner|group|other，3种身份各有read4r|write2w|execute1x</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜  man ls  // 详细的命令</span><br><span class="line">➜  info ls </span><br><span class="line">➜  ll // 文件权限|连接数|文件所属者|文件所属用户组|文件大小|文件最后修改时间|文件名</span><br><span class="line">➜  whoami</span><br><span class="line">➜  id -a weiqian</span><br><span class="line">➜  groups</span><br><span class="line">➜  id -a root</span><br><span class="line">➜  sudo chown root:wheel demo</span><br><span class="line">➜  sudo chomd 777 demo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>linux目录配置标准FHS</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/ 根目录，与开机系统有关</span><br><span class="line">/usr（UNIX software resource） 与软件安装执行有关</span><br><span class="line">/var (variable) 与系统运作过程有关</span><br><span class="line">/bin 重要的执行文件，主要有cat|chomod|chown|date|mv|mkdir|cp|bash</span><br><span class="line">/sbin 重要的系统执行文件</span><br><span class="line">/etc 系统配置文件，例如人员的账号密码配置，各种文件的起始文件</span><br><span class="line">/home 用户的住文件夹</span><br><span class="line">/opt 第三方软件的放置目录（非原本的distribution）</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>目录相关操作</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.  此层目录</span><br><span class="line">.. 上层目录</span><br><span class="line">-  前一个工作目录</span><br><span class="line">~  目前用户身份所在的主文件夹</span><br><span class="line"><span class="built_in">pwd</span>|mkdir|rmdir //处理目录</span><br><span class="line">cp|rm|mv        //复制删除移动</span><br><span class="line">cat|tac|nl|more|less|head|tail //查看文件</span><br><span class="line">touch //修改文件时间或者创建新文件</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="二、硬件、内核与shell"><a href="#二、硬件、内核与shell" class="headerlink" title="二、硬件、内核与shell"></a>二、硬件、内核与shell</h3><ol>
+<li><p>什么是shell</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">我们必须通过shell讲我们输入的命令与内核通信，好让内核可以控制硬件来正确无误的工作。操作系统其实是一组软件，由于这组软件在控制整个硬件与管理系统的活动检测，如果这组软件能被用户随意操作，若用户使用不当，将会使得系统崩溃。因为操作系统就是管理整个硬件功能，所以不能随便被一些没有管理能里的终端用户随意使用。</span><br><span class="line">shell的功能只是提供用户操作系统的一个接口，因此这个shell需要调用其他软件才好，例如man|chmod|vi等等，这些命令都是独立的应用程序，但是我们可以通过shell(就是命令行模式)来操作这些应用程序，让这些应用程序调用内核来运行所需的工作。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>我们常用的shell</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">（Bourne Again Shell）简称bash，这个shell是Bourne Shell的增强版本</span><br><span class="line">/bin/sh(已经被/bin/bash替代)</span><br><span class="line">/bin/bash(linux的默认的)</span><br><span class="line">/bin/ksh</span><br><span class="line">/bin/tcsh</span><br><span class="line">/bin/csh</span><br><span class="line">/bin/zsh(基于ksh发展出来的，功能更强大的的shell)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>bash shell的功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">命令记忆功能 history</span><br><span class="line">命令与文件补全功能 tab</span><br><span class="line">命令别名设置功能 alias</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>shell的变量功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">影响你能不能在任何目录下执行某个命令与PATH这个变量有很大关系，例如你在执行ls这个命令时候系统就是通过PATH这个变量里面的内容所记录的路径顺序来查找命令的，如果PATH这个变量里面路径还找不到ls这个命令时候，就会在屏幕上显示 “command not found”</span><br><span class="line">在linux下所有的执行都需要一个执行码，你真正以shell来跟linux通信，是在正确登陆linux之后，这个时候你就有一个bash的可执行程序，也才可以真正经由bash和系统通信。而在进入shell之前，由于系统需要一些变量来提供它的数据访问，所以就有了一些环境变量需要读入系统。例如PATH|HOME|MAIL|SHELL，为了区分和自定义变量不通，环境变量通常用大些表示。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>变量的显示和设置</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 变量显示echo，只要在变量名称前面加上$</span><br><span class="line">➜  / echo $PATH</span><br><span class="line">/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin</span><br><span class="line">// 若为了该变量增加变量内容时候，可用‘$变量’累加内容，例如 PATH=“$PATH&quot;:/home/bin</span><br></pre></td></tr></table></figure>
+<h3 id="三、bash的环境配置文件"><a href="#三、bash的环境配置文件" class="headerlink" title="三、bash的环境配置文件"></a>三、bash的环境配置文件</h3><ol>
+<li><p>我们知道查看文件属性的命令ls的完整文件名为:/bin/ls，问题来了，为什么我可以在任何地方执行/bin/ls这个命令呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当我们在执行一个命令时候，系统会按照PATH的设置去每个PATH定义的目录下查询文件名为ls的可执行文件，如果在PATH定义的目录中含有多个文件名字为ls的可执行文件，那么先查询到的同名命令会被执行</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>我们什么都没做，但是已进入bash就取得一堆有用的变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这是因为操作系统有一些环境配置文件的存在，让bash在启动的时候就直接读取了这些配置文件，以规划好bash的操作环境，这些环境又分为系统文件和个人偏好配置文件。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>~/.bash_profile (login shell才会读取)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash在读完了整体环境变量设置的/etc/profile并借此调用其他的配置文件之后，接下来会读取用户的个人配置文件，在login shell的配置文件种，所读取的个人偏好文件有3个依次是 ~/.bash_profile | ~/.bash_login | ~/.profile，按照顺序读取其中的一个</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>source 读取环境配置文件的命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">由于/etc/profile与~/.bash_profile都是在取得login shell的时候才会读取的配置文件，所以如果你将自己的偏好设置写入上述文件后，通常都是注销在登陆后设置才能生效，想要不注销直接读取文件，就要利用source这个文件。</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/linux/" rel="tag"># linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/09/26/react-i18next的应用及工作原理/" rel="prev" title="react-i18next的应用及工作原理">
+      <i class="fa fa-chevron-left"></i> react-i18next的应用及工作原理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/10/10/本地搭建nginx-https服务/" rel="next" title="本地搭建nginx https服务">
+      本地搭建nginx https服务 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、文件权限和目录"><span class="nav-number">1.</span> <span class="nav-text">一、文件权限和目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、硬件、内核与shell"><span class="nav-number">2.</span> <span class="nav-text">二、硬件、内核与shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、bash的环境配置文件"><span class="nav-number">3.</span> <span class="nav-text">三、bash的环境配置文件</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

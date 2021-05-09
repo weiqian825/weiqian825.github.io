@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、场景  本机起一个web的服务，访问后台接口  12345window.fetch(&apos;https://dp-admin.test.xxxxx.io/api/order/list?page=1&amp;amp;page_size=10&apos;, &amp;#123;method: &apos;get&apos;&amp;#125;).then(response =&amp;gt; &amp;#123;  return response.json()&amp;#125;">
+<meta name="keywords" content="webpack,cors">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack解决跨越问题">
+<meta property="og:url" content="http://yoursite.com/2018/09/21/webpack解决跨越问题/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="一、场景  本机起一个web的服务，访问后台接口  12345window.fetch(&apos;https://dp-admin.test.xxxxx.io/api/order/list?page=1&amp;amp;page_size=10&apos;, &amp;#123;method: &apos;get&apos;&amp;#125;).then(response =&amp;gt; &amp;#123;  return response.json()&amp;#125;">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.400Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="webpack解决跨越问题">
+<meta name="twitter:description" content="一、场景  本机起一个web的服务，访问后台接口  12345window.fetch(&apos;https://dp-admin.test.xxxxx.io/api/order/list?page=1&amp;amp;page_size=10&apos;, &amp;#123;method: &apos;get&apos;&amp;#125;).then(response =&amp;gt; &amp;#123;  return response.json()&amp;#125;">
+
+<link rel="canonical" href="http://yoursite.com/2018/09/21/webpack解决跨越问题/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>webpack解决跨越问题 | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/21/webpack解决跨越问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          webpack解决跨越问题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-09-21 18:34:25" itemprop="dateCreated datePublished" datetime="2018-09-21T18:34:25+00:00">2018-09-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/react/" itemprop="url" rel="index"><span itemprop="name">react</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一、场景"><a href="#一、场景" class="headerlink" title="一、场景"></a>一、场景</h3><p>  本机起一个web的服务，访问后台接口<br>  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.fetch(<span class="string">'https://dp-admin.test.xxxxx.io/api/order/list?page=1&amp;page_size=10'</span>, &#123;<span class="attr">method</span>: <span class="string">'get'</span>&#125;).then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> response.json()</span><br><span class="line">&#125;).then(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(data)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>  跨域报错如下，可以说很日常了<br>  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">localhost/:1 Failed to load https://dp-admin.test.xxxxx.io/api/order/list?page=1&amp;page_size=10: No <span class="string">'Access-Control-Allow-Origin'</span> header is present on the requested resource. Origin <span class="string">'http://localhost:8080'</span> is therefore not allowed access. If an opaque response serves your needs, <span class="built_in">set</span> the request<span class="string">'s mode to '</span>no-cors<span class="string">' to fetch the resource with CORS disabled.</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="二、本地搭建一个服务器做转发"><a href="#二、本地搭建一个服务器做转发" class="headerlink" title="二、本地搭建一个服务器做转发"></a>二、本地搭建一个服务器做转发</h3>   <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> request = <span class="built_in">require</span>(<span class="string">'request'</span>)</span><br><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>)</span><br><span class="line"><span class="keyword">const</span> app = express()</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> testHost = <span class="string">'http://dp-admin.test.xxxxx.io'</span></span><br><span class="line"><span class="keyword">const</span> dpHost = process.env.HOST || testHost</span><br><span class="line"></span><br><span class="line">app.use(<span class="string">'/api'</span>, (req, res, next) =&gt; &#123;</span><br><span class="line"> <span class="built_in">console</span>.log(<span class="string">'req----&gt;'</span>, dpHost + req.originalUrl)</span><br><span class="line"> <span class="keyword">const</span> requestObj = request[req.method.toLowerCase()](&#123;</span><br><span class="line">   url: dpHost + req.originalUrl</span><br><span class="line"> &#125;)</span><br><span class="line"> req.pipe(requestObj)</span><br><span class="line"> requestObj.pipe(res)</span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">3001</span>)</span><br></pre></td></tr></table></figure>
+<p>   浏览器访问<a href="http://localhost:3001/api/order/list?page=1&amp;page_size=10返回如下" target="_blank" rel="noopener">http://localhost:3001/api/order/list?page=1&amp;page_size=10返回如下</a><br>   <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"err_code"</span>: <span class="number">32</span>,</span><br><span class="line">  <span class="string">"err_msg"</span>: <span class="string">"not login"</span>,</span><br><span class="line">  <span class="string">"data"</span>: <span class="literal">null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>   证明我们写的代理服务请求没问题</p>
+<h3 id="三、-设置webpack的devServer"><a href="#三、-设置webpack的devServer" class="headerlink" title="三、 设置webpack的devServer"></a>三、 设置webpack的devServer</h3>   <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">proxy: &#123;</span><br><span class="line">  '/api': 'http://localhost:3001'</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>   重新请求报错和刚才一样，为什么呢？ 页面的访问地址是<a href="http://localhost:8080/" target="_blank" rel="noopener">http://localhost:8080/</a> 我们请求的地址是<a href="https://dp-admin.test.xxxxx.io/api/order/list?page=1&amp;page_size=10，这里http://localhost:8080/" target="_blank" rel="noopener">https://dp-admin.test.xxxxx.io/api/order/list?page=1&amp;page_size=10，这里http://localhost:8080/</a> 和<a href="https://dp-admin.test.xxxxx.io明显不是一个域名，也就是说请求和devServer服务器是跨域的，则不存在devServer正常响应重新转发到&#39;http://localhost:3001&#39;，本地express服务是没有工作的。所以我们改下代码入下" target="_blank" rel="noopener">https://dp-admin.test.xxxxx.io明显不是一个域名，也就是说请求和devServer服务器是跨域的，则不存在devServer正常响应重新转发到&#39;http://localhost:3001&#39;，本地express服务是没有工作的。所以我们改下代码入下</a><br>   <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// http://localhost:8080//api/order/list?page=1&amp;page_size=10等效，保证和devServer同域名就好</span></span><br><span class="line"><span class="built_in">window</span>.fetch(<span class="string">'/api/order/list?page=1&amp;page_size=10'</span>, &#123;<span class="attr">method</span>: <span class="string">'get'</span>&#125;).then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> response.json()</span><br><span class="line">&#125;).then(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(data)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>   果然跨域问题解决了，express也看到了日志进去了<br>   <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">"err_code"</span>:<span class="number">32</span>,<span class="string">"err_msg"</span>:<span class="string">"not login"</span>,<span class="string">"data"</span>:<span class="literal">null</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>   返回没有登陆，我们实际的页面已经登陆了<a href="https://dp-admin.test.xxxxx.io/" target="_blank" rel="noopener">https://dp-admin.test.xxxxx.io/</a> ，我们本地的页面地址是<a href="http://localhost:8080/" target="_blank" rel="noopener">http://localhost:8080/</a> 这种情况下cookie明显写不进去，所以做如下设置</p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">devServer: &#123;</span><br><span class="line">   port: &apos;8080&apos;,</span><br><span class="line">   host: &apos;dp-admin.test.xxxxx.io&apos;,</span><br><span class="line">   contentBase: path.join(__dirname, &apos;../public&apos;),</span><br><span class="line">   compress: true,</span><br><span class="line">   historyApiFallback: true,</span><br><span class="line">   hot: true,</span><br><span class="line">   https: false,</span><br><span class="line">   noInfo: true,</span><br><span class="line">   open: true,</span><br><span class="line">   proxy: &#123;</span><br><span class="line">      &apos;/api&apos;: &apos;http://localhost:3001&apos;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>   运行 npm run dev，报错如下<br>   <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt; webpack-dev-server --inline --progress --config build/webpack.dev.conf.js</span><br><span class="line"></span><br><span class="line"> 10% building modules 1/1 modules 0 activeevents.js:167</span><br><span class="line">     throw er; // Unhandled <span class="string">'error'</span> event</span><br><span class="line">     ^</span><br><span class="line"></span><br><span class="line"> Error: listen EADDRNOTAVAIL 203.117.178.74:8080</span><br><span class="line">     at Server.setupListenHandle [as _listen2] (net.js:1313:19)</span><br><span class="line">     at listenInCluster (net.js:1378:12)</span><br><span class="line">     at GetAddrInfoReqWrap.doListen [as callback] (net.js:1491:7)</span><br><span class="line">     at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:55:10)</span><br><span class="line"> Emitted <span class="string">'error'</span> event at:</span><br><span class="line">     at emitErrorNT (net.js:1357:8)</span><br><span class="line">     at process._tickCallback (internal/process/next_tick.js:174:19)</span><br></pre></td></tr></table></figure></p>
+<p>   增加本地代理<br>   <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/hosts</span><br><span class="line">127.0.0.1 dp-admin.test.xxxxx.io</span><br></pre></td></tr></table></figure></p>
+<p>   npm run dev<br>   <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">➜  webpack-cross git:(master) ✗ npm run dev</span><br><span class="line"></span><br><span class="line"> &gt; webpack-cross@1.0.0 dev /Users/weiqian/Desktop/xxxxx/webpack-cross</span><br><span class="line"> &gt; webpack-dev-server --inline --progress --config build/webpack.dev.conf.js</span><br><span class="line"></span><br><span class="line"> [HPM] Error occurred <span class="keyword">while</span> trying to proxy request /api/order/list?page=1&amp;page_size=10 from dp-admin.test.xxxxx.io:8080 to http://localhost:3001 (ECONNRESET) (https://nodejs.org/api/errors.html<span class="comment">#errors_common_system_errors)</span></span><br><span class="line"> // ECONNRESET (连接被重置): 一个连接被强行关闭。 这通常是因为连接到远程 socket 超时或重启。 常发生于 http 和 net 模块。</span><br><span class="line"> // 浏览器显示错误</span><br><span class="line">index.js:9 GET http://dp-admin.test.xxxxx.io:8080/api/order/list?page=1&amp;page_size=10 504 (Gateway Timeout)</span><br><span class="line">// prxoy服务错误</span><br><span class="line"> node data/proxy.js</span><br><span class="line"></span><br><span class="line"> req----&gt; http://dp-admin.test.xxxxx.io/api/order/list?page=1&amp;page_size=10</span><br><span class="line"> internal/streams/legacy.js:57</span><br><span class="line">     throw er; // Unhandled stream error <span class="keyword">in</span> pipe.</span><br><span class="line">     ^</span><br><span class="line"></span><br><span class="line"> Error: connect ECONNREFUSED 127.0.0.1:80</span><br><span class="line">     at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1161:14)</span><br><span class="line"> npm ERR! code ELIFECYCLE</span><br><span class="line"> npm ERR! errno 1</span><br><span class="line"> npm ERR! webpack-cross@1.0.0 proxy: `node data/proxy.js`</span><br><span class="line"> npm ERR! Exit status 1</span><br><span class="line"> npm ERR!</span><br><span class="line"> npm ERR! Failed at the webpack-cross@1.0.0 proxy script.</span><br><span class="line"> npm ERR! This is probably not a problem with npm. There is likely additional logging output above.</span><br><span class="line"></span><br><span class="line"> npm ERR! A complete <span class="built_in">log</span> of this run can be found <span class="keyword">in</span>:</span><br><span class="line"> npm ERR!     /Users/weiqian/.npm/_logs/2018-09-21T12_35_13_611Z-debug.log</span><br><span class="line"></span><br><span class="line"> // 我们访问线上页面 https://dp-admin.test.xxxxx.io/ 错误</span><br><span class="line">This site can’t be reached</span><br><span class="line"> dp-admin.test.xxxxx.io refused to connect.</span><br><span class="line"> Try:</span><br><span class="line"></span><br><span class="line"> Checking the connection</span><br><span class="line"> Checking the proxy and the firewall</span><br><span class="line"> ERR_CONNECTION_REFUSED</span><br></pre></td></tr></table></figure></p>
+<p>   我们设置了真实线上的域名，运行本地页面，请求被devServer转发到3001的express服务器，接着express访问了被解析到本地的机器上ECONNREFUSED，所以明显需要改配置页面不能为线上真实地址<br>   <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack</span></span><br><span class="line">devServer&#123;</span><br><span class="line">   host: <span class="string">'local.dp-admin.test.xxxxx.io'</span></span><br><span class="line">&#125; </span><br><span class="line"><span class="comment">// /etc/hosts</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> local.dp-admin.test.xxxxx.io</span><br></pre></td></tr></table></figure></p>
+<p>重新运行npm run proxy、 npm run dev错误是一样的，正常线上页面也无法访问。哦我们忘了删掉host里面的配置，express出错，删掉host配置的   127.0.0.1 dp-admin.test.xxxxx.io，世界和平啊！！！<br> <a href="https://github.com/weiqian93/react-demo/tree/master/webpack-cors" target="_blank" rel="noopener">demo地址</a></p>
+<h3 id="四、create-my-app设置"><a href="#四、create-my-app设置" class="headerlink" title="四、create-my-app设置"></a>四、create-my-app设置</h3><p>  思路和webpack差不多 </p>
+<ol>
+<li>起本地服务(服务端请求不存在跨域问题) </li>
+<li><p>package.json设置proxy(跨域)和host(cookie)</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">  "proxy": "node data/proxy.js",</span><br><span class="line">  "start": "HOST=local.dp-admin.test.xxxxx.io react-scripts start",</span><br><span class="line">&#125;,</span><br><span class="line">"proxy": &#123;</span><br><span class="line">  "/api": &#123;</span><br><span class="line">    "target": "http://localhost:3001/"</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">componentDidMount () &#123;</span><br><span class="line">  <span class="built_in">window</span>.fetch(<span class="string">'/api/order/list?page=1&amp;page_size=10'</span>, &#123;<span class="attr">method</span>: <span class="string">'get'</span>&#125;).then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> response.json()</span><br><span class="line">    &#125;).then(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(data)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/weiqian93/react-demo/tree/master/my-app-cors" target="_blank" rel="noopener">demo地址</a></p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/webpack/" rel="tag"># webpack</a>
+              <a href="/tags/cors/" rel="tag"># cors</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/09/12/mac开发环境配置/" rel="prev" title="mac开发环境配置">
+      <i class="fa fa-chevron-left"></i> mac开发环境配置
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/09/26/react-i18next的应用及工作原理/" rel="next" title="react-i18next的应用及工作原理">
+      react-i18next的应用及工作原理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、场景"><span class="nav-number">1.</span> <span class="nav-text">一、场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、本地搭建一个服务器做转发"><span class="nav-number">2.</span> <span class="nav-text">二、本地搭建一个服务器做转发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、-设置webpack的devServer"><span class="nav-number">3.</span> <span class="nav-text">三、 设置webpack的devServer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、create-my-app设置"><span class="nav-number">4.</span> <span class="nav-text">四、create-my-app设置</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

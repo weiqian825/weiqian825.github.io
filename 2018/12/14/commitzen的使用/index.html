@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前言commitzen是一个帮助规范commit message的工具，优点很规范、优雅、易管理拓展等等好处不列举了，看下怎么使用 一、commit message 格式12345678910111213141516171819commit message&amp;lt;type&amp;gt;(&amp;lt;scope&amp;gt;): &amp;lt;subject&amp;gt;// 空一行&amp;lt;body&amp;gt;// 空一行&amp;lt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="commitzen的使用">
+<meta property="og:url" content="http://yoursite.com/2018/12/14/commitzen的使用/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="前言commitzen是一个帮助规范commit message的工具，优点很规范、优雅、易管理拓展等等好处不列举了，看下怎么使用 一、commit message 格式12345678910111213141516171819commit message&amp;lt;type&amp;gt;(&amp;lt;scope&amp;gt;): &amp;lt;subject&amp;gt;// 空一行&amp;lt;body&amp;gt;// 空一行&amp;lt;">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="commitzen的使用">
+<meta name="twitter:description" content="前言commitzen是一个帮助规范commit message的工具，优点很规范、优雅、易管理拓展等等好处不列举了，看下怎么使用 一、commit message 格式12345678910111213141516171819commit message&amp;lt;type&amp;gt;(&amp;lt;scope&amp;gt;): &amp;lt;subject&amp;gt;// 空一行&amp;lt;body&amp;gt;// 空一行&amp;lt;">
+
+<link rel="canonical" href="http://yoursite.com/2018/12/14/commitzen的使用/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>commitzen的使用 | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/14/commitzen的使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          commitzen的使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-12-14 10:23:02" itemprop="dateCreated datePublished" datetime="2018-12-14T10:23:02+00:00">2018-12-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p><a href="https://github.com/commitizen/cz-cli" target="_blank" rel="noopener">commitzen</a>是一个帮助规范commit message的工具，优点很规范、优雅、易管理拓展等等好处不列举了，看下怎么使用</p>
+<h3 id="一、commit-message-格式"><a href="#一、commit-message-格式" class="headerlink" title="一、commit message 格式"></a>一、commit message 格式</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">commit message</span><br><span class="line"><span class="tag">&lt;<span class="name">type</span>&gt;</span>(<span class="tag">&lt;<span class="name">scope</span>&gt;</span>): <span class="tag">&lt;<span class="name">subject</span>&gt;</span></span><br><span class="line">// 空一行</span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">// 空一行</span><br><span class="line"><span class="tag">&lt;<span class="name">footer</span>&gt;</span></span><br><span class="line"></span><br><span class="line">Header</span><br><span class="line">  type + scope + subject</span><br><span class="line">type</span><br><span class="line">  feat    : 新增加的功能（feature）</span><br><span class="line">  fix     : 修复bug</span><br><span class="line">  doc     : 文档，例如README</span><br><span class="line">  style   : 格式（不影响代码运行的变动）</span><br><span class="line">  refactor: 重构</span><br><span class="line">  test    : 测试</span><br><span class="line">  chore   : 构建过程或辅助工具的变动，项目版本变更等。</span><br><span class="line">scope   : 影响的范围，比如数据层、控制层、视图层等等，视项目不同而不同</span><br><span class="line">subject : 提交内容的简要描述</span><br></pre></td></tr></table></figure>
+<h3 id="二、commitizen-全局安装"><a href="#二、commitizen-全局安装" class="headerlink" title="二、commitizen(全局安装)"></a>二、commitizen(全局安装)</h3><ol>
+<li><p>全局安装执行命令</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  test npm install -g commitizen</span><br><span class="line">➜  test  commitizen init cz-conventional-changelog --save --save-exact</span><br><span class="line">（或者 echo <span class="string">'&#123; "path": "cz-conventional-changelog" &#125;'</span> &gt; ~<span class="regexp">/.czrc）</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置的改变</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">"devDependencies": &#123;</span><br><span class="line">  "cz-conventional-changelog": "^2.1.0"</span><br><span class="line">&#125;,</span><br><span class="line">"config": &#123;</span><br><span class="line">  "commitizen": &#123;</span><br><span class="line">    "path": "./node_modules/cz-conventional-changelog"</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>全局安装demo</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">➜  xxxxx mkdir test</span><br><span class="line">➜  xxxxx cd test</span><br><span class="line">➜  test npm init</span><br><span class="line">➜  test npm i</span><br><span class="line">➜  test npm install -g commitizen</span><br><span class="line">➜  test  commitizen init cz-conventional-changelog --save --save-exact</span><br><span class="line">➜  test git init</span><br><span class="line">➜  test git:(master) ✗ git status</span><br><span class="line">➜  test git:(master) ✗ git add .</span><br><span class="line">➜  test git:(master) ✗ git cz</span><br><span class="line">cz-cli@<span class="number">3.0</span><span class="number">.5</span>, cz-conventional-changelog@<span class="number">2.1</span><span class="number">.0</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Line <span class="number">1</span> will be cropped at <span class="number">100</span> characters. All other lines will be wrapped after <span class="number">100</span> characters.</span><br><span class="line"></span><br><span class="line">? Select the type <span class="keyword">of</span> change that you<span class="string">'re committing: (Use arrow keys)</span></span><br><span class="line"><span class="string">❯ feat:     A new feature</span></span><br><span class="line"><span class="string">  fix:      A bug fix</span></span><br><span class="line"><span class="string">  docs:     Documentation only changes</span></span><br><span class="line"><span class="string">  style:    Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)</span></span><br><span class="line"><span class="string">  refactor: A code change that neither fixes a bug nor adds a feature</span></span><br><span class="line"><span class="string">  perf:     A code change that improves performance</span></span><br><span class="line"><span class="string">  test:     Adding missing tests or correcting existing tests</span></span><br><span class="line"><span class="string">(Move up and down to reveal more choices)</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="三、commitizen-局部安装"><a href="#三、commitizen-局部安装" class="headerlink" title="三、commitizen(局部安装)"></a>三、commitizen(局部安装)</h3><ol>
+<li><p>局部安装执行命令（AB方法等效）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">---------------方法A-------------------------</span><br><span class="line">➜  test  npm i commitizen --save-dev</span><br><span class="line">➜  test ./node_modules/.bin/commitizen init cz-conventional-changelog --save-dev</span><br><span class="line">---------------方法B-------------------------</span><br><span class="line">➜  test  npm i commitizen --save-dev</span><br><span class="line">➜  test  npm i cz-conventional-changelog --save-dev</span><br><span class="line">自己配置package.json</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"config"</span>: &#123;</span><br><span class="line">    <span class="string">"commitizen"</span>: &#123;</span><br><span class="line">      <span class="string">"path"</span>: <span class="string">"./node_modules/cz-conventional-changelog"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置的改变</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">"devDependencies": &#123;</span><br><span class="line">   "commitizen": "^3.0.5",</span><br><span class="line">   "cz-conventional-changelog": "^2.1.0"</span><br><span class="line"> &#125;,</span><br><span class="line"> "config": &#123;</span><br><span class="line">   "commitizen": &#123; </span><br><span class="line">     "path": "./node_modules/cz-conventional-changelog"</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> // 比全局的commitizen多了一个局部依赖commitizen</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>cz-customizable和cz-conventional-changelog差不多，也是commitizen的adapter。</p>
+</li>
+</ol>
+<h3 id="四、Change-log"><a href="#四、Change-log" class="headerlink" title="四、Change log"></a>四、Change log</h3><ol>
+<li><p>全局安装执行脚本</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">npm install -g conventional-changelog-cli</span><br><span class="line">conventional-changelog -p angular -i CHANGELOG.md -w </span><br><span class="line">为了方便起见我们把这个log的命令写到package.json</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"scripts"</span>: &#123;</span><br><span class="line">    <span class="string">"changelog"</span>: <span class="string">"conventional-changelog -p angular -i CHANGELOG.md -w -r 0"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>全局安装demo</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">如果你的提交都符合规范，那么执行脚本npm run changelog将生成文档包括下面三个部分</span><br><span class="line">New features</span><br><span class="line">Bug fixes</span><br><span class="line">Breaking changes.</span><br><span class="line">➜  test git:(master) conventional-changelog -p angular -i CHANGELOG.md -w</span><br><span class="line"># 1.0.0 (2018-12-14)</span><br><span class="line">### Features</span><br><span class="line">* **test commitlint and changelog:** test commitlint and changelog c6cb5f5</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="五、commitlint"><a href="#五、commitlint" class="headerlink" title="五、commitlint"></a>五、commitlint</h3><p>commitzen和change log添加了后，还有一个遗留问题，git commit 依旧能使用，忘记的时候还有可能不规范提交，<a href="https://marionebl.github.io/commitlint/#/guides-local-setup" target="_blank" rel="noopener">commitlint安装</a>了解下<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">类似于 eslint commitlint支持配置文件类型</span><br><span class="line"> .commitlint.config.js</span><br><span class="line"> .commitlintrc.js</span><br><span class="line"> .commitlintrc.json</span><br><span class="line"> .commitlintrc.yml </span><br><span class="line"> ...</span><br><span class="line">或者在package.json添加commitlint字段。</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>配置一<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># Install commitlint cli and conventional config</span><br><span class="line">npm install --save-dev @commitlint/&#123;config-conventional,cli&#125;</span><br><span class="line"># Configure commitlint to use conventional config</span><br><span class="line">echo "module.exports = &#123;extends: ['@commitlint/config-conventional']&#125;" &gt; commitlint.config.js</span><br><span class="line">npm install --save-dev husky</span><br><span class="line">&#123;</span><br><span class="line"> <span class="attr">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"@commitlint/cli"</span>: <span class="string">"^7.2.1"</span>,</span><br><span class="line">    <span class="attr">"@commitlint/config-conventional"</span>: <span class="string">"^7.1.2"</span>,</span><br><span class="line">    <span class="attr">"cz-conventional-changelog"</span>: <span class="string">"^2.1.0"</span>,</span><br><span class="line">    <span class="attr">"husky"</span>: <span class="string">"^1.2.1"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"husky"</span>: &#123;</span><br><span class="line">    <span class="attr">"hooks"</span>: &#123;</span><br><span class="line">      <span class="attr">"commit-msg"</span>: <span class="string">"commitlint -E HUSKY_GIT_PARAMS"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"config"</span>: &#123;</span><br><span class="line">    <span class="attr">"commitizen"</span>: &#123;</span><br><span class="line">      <span class="attr">"path"</span>: <span class="string">"./node_modules/cz-conventional-changelog"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>test demo<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">➜  test git:(master) ✗ git add .</span><br><span class="line">➜  test git:(master) ✗ git cm 'test commitlint'</span><br><span class="line">husky &gt; commit-msg (node v10.0.0)</span><br><span class="line"></span><br><span class="line">⧗   input:</span><br><span class="line">test commitlint</span><br><span class="line"></span><br><span class="line">✖   message may not be empty [subject-empty]</span><br><span class="line">✖   type may not be empty [type-empty]</span><br><span class="line">✖   found 2 problems, 0 warningshusky &gt; commit-msg hook failed (add --no-verify to bypass)</span><br></pre></td></tr></table></figure></p>
+<h3 id="六、实践问题"><a href="#六、实践问题" class="headerlink" title="六、实践问题"></a>六、实践问题</h3><p>在加上了commitzen之后遇到一个问题，不同人提交终端提示不一样，最终的提交记录也不一样，有的有小图标，有的没有小图标？</p>
+<ol>
+<li><p>有图标</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">➜  sniper git:(feature-train-tickets) npm run commit</span><br><span class="line"></span><br><span class="line">&gt; sniper@0.1.0 commit /Users/weiqian/Desktop/sniper</span><br><span class="line">&gt; npx git-cz</span><br><span class="line"></span><br><span class="line">npx: 1 安装成功，用时 3.681 秒</span><br><span class="line">? Select the type of change that you&apos;re committing:</span><br><span class="line">  🎡 ci:         CI related changes</span><br><span class="line">  ⚡️ perf:       A code change that improves performance</span><br><span class="line">  💍 test:       Adding missing tests</span><br><span class="line">❯ 🎸 feat:       A new feature</span><br><span class="line">  🐛 fix:        A bug fix</span><br><span class="line">  🤖 chore:      Build process or auxiliary tool changes</span><br><span class="line">  ✏️ docs:       Documentation only changes</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>没图标</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">➜  sniper git:(feature-train-tickets) ✗ npm run commit</span><br><span class="line"></span><br><span class="line">&gt; sniper@0.1.1 commit /Users/weiqian/Desktop/sniper</span><br><span class="line">&gt; npx git-cz</span><br><span class="line"></span><br><span class="line">cz-cli@3.0.5, cz-conventional-changelog@2.1.0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Line 1 will be cropped at 100 characters. All other lines will be wrapped after 100 characters.</span><br><span class="line"></span><br><span class="line">? Select the type of change that you&apos;re committing: (Use arrow keys)</span><br><span class="line">❯ feat:     A new feature</span><br><span class="line">  fix:      A bug fix</span><br><span class="line">  docs:     Documentation only changes</span><br><span class="line">  style:    Changes that do not affect the meaning of the code (white-space, formatting, missing semi</span><br><span class="line">-colons, etc)</span><br><span class="line">  refactor: A code change that neither fixes a bug nor adds a feature</span><br><span class="line">  perf:     A code change that improves performance</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>从执行的命令可以看到，执行npx git-cz，有图标的实际上是在安装git-cz的adpater。没有图标的实际上是用的<a href="mailto:cz-cli@3.0.5" target="_blank" rel="noopener">cz-cli@3.0.5</a>的adapter，为什么执行同样的命令会发生不一样的结果，是因为npm的bin目录不一致导致，最简单的方法就是把依赖安装到项目本身，而不是用全局命令，保证所有人命令是统一的。</p>
+<h3 id="七、npm-一些其他命令"><a href="#七、npm-一些其他命令" class="headerlink" title="七、npm 一些其他命令"></a>七、npm 一些其他命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm list -g --depth 0</span><br><span class="line">npm cache clean -f</span><br><span class="line">sudo chown -R $USER /Users/weiqian/Desktop/test</span><br></pre></td></tr></table></figure>
+<p>➜  sniper git:(feature-train-tickets) ✗ npm list -g –depth 0<br>/usr/local/lib<br>├── @<a href="mailto:xxxxx/regen@0.3.0" target="_blank" rel="noopener">xxxxx/regen@0.3.0</a><br>├── <a href="mailto:ant-design-pro-cli@1.0.0" target="_blank" rel="noopener">ant-design-pro-cli@1.0.0</a><br>├── <a href="mailto:babel-eslint@8.2.5" target="_blank" rel="noopener">babel-eslint@8.2.5</a><br>├── <a href="mailto:commitizen@3.0.5" target="_blank" rel="noopener">commitizen@3.0.5</a><br>├── <a href="mailto:conventional-changelog-cli@2.0.11" target="_blank" rel="noopener">conventional-changelog-cli@2.0.11</a><br>├── <a href="mailto:create-react-app@1.5.2" target="_blank" rel="noopener">create-react-app@1.5.2</a><br>├── <a href="mailto:cz@1.8.2" target="_blank" rel="noopener">cz@1.8.2</a><br>├── <a href="mailto:depcheck@0.6.11" target="_blank" rel="noopener">depcheck@0.6.11</a><br>├── <a href="mailto:download-csv@1.1.1" target="_blank" rel="noopener">download-csv@1.1.1</a><br>├── <a href="mailto:eslint@5.0.1" target="_blank" rel="noopener">eslint@5.0.1</a><br>├── <a href="mailto:hexo@3.7.1" target="_blank" rel="noopener">hexo@3.7.1</a><br>├── <a href="mailto:hexo-cli@1.1.0" target="_blank" rel="noopener">hexo-cli@1.1.0</a><br>├── <a href="mailto:husky@0.14.3" target="_blank" rel="noopener">husky@0.14.3</a><br>├── <a href="mailto:n@2.1.11" target="_blank" rel="noopener">n@2.1.11</a><br>├── <a href="mailto:node-pre-gyp@0.11.0" target="_blank" rel="noopener">node-pre-gyp@0.11.0</a><br>├── <a href="mailto:npm@6.4.1" target="_blank" rel="noopener">npm@6.4.1</a><br>├── <a href="mailto:rapydscript@0.5.58" target="_blank" rel="noopener">rapydscript@0.5.58</a><br>├── <a href="mailto:rimraf@2.6.2" target="_blank" rel="noopener">rimraf@2.6.2</a><br>├── <a href="mailto:sqlite3@4.0.2" target="_blank" rel="noopener">sqlite3@4.0.2</a><br>├── <a href="mailto:standard@11.0.1" target="_blank" rel="noopener">standard@11.0.1</a><br>├── <a href="mailto:webpack@4.8.3" target="_blank" rel="noopener">webpack@4.8.3</a><br>├── <a href="mailto:webpack-cli@2.1.3" target="_blank" rel="noopener">webpack-cli@2.1.3</a><br>├── <a href="mailto:webpack-dev-server@3.1.4" target="_blank" rel="noopener">webpack-dev-server@3.1.4</a><br>├── <a href="mailto:whistle@1.10.10" target="_blank" rel="noopener">whistle@1.10.10</a><br>├── <a href="mailto:whistle.vase@0.1.0" target="_blank" rel="noopener">whistle.vase@0.1.0</a><br>└── <a href="mailto:yarn@1.9.4" target="_blank" rel="noopener">yarn@1.9.4</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/12/13/基本代码规范（持续更新中-）/" rel="prev" title="基本代码规范（持续更新中...）">
+      <i class="fa fa-chevron-left"></i> 基本代码规范（持续更新中...）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/01/22/treeform表单设计/" rel="next" title="treeform表单设计">
+      treeform表单设计 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一、commit-message-格式"><span class="nav-number">2.</span> <span class="nav-text">一、commit message 格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、commitizen-全局安装"><span class="nav-number">3.</span> <span class="nav-text">二、commitizen(全局安装)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、commitizen-局部安装"><span class="nav-number">4.</span> <span class="nav-text">三、commitizen(局部安装)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、Change-log"><span class="nav-number">5.</span> <span class="nav-text">四、Change log</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、commitlint"><span class="nav-number">6.</span> <span class="nav-text">五、commitlint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、实践问题"><span class="nav-number">7.</span> <span class="nav-text">六、实践问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、npm-一些其他命令"><span class="nav-number">8.</span> <span class="nav-text">七、npm 一些其他命令</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

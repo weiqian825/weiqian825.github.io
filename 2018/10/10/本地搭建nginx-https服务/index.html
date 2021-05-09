@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前言  前几天，pm反馈页面被运营商劫持，出现了小广告，我们检查了项目内并没有http链接，理论上都是https应该不回被劫持，后来发现反馈的页面是外部的投放资源是http，另外我们的nginx配置的兜底策略关闭掉直接访问页面的http链接。所以需要在本地验证一波https的nginx配置。 一、相关原理 对称加密 非对称加密 https采用的是对称加密和非对称加密混合的方式 https tls握">
+<meta name="keywords" content="nginx,https">
+<meta property="og:type" content="article">
+<meta property="og:title" content="本地搭建nginx https服务">
+<meta property="og:url" content="http://yoursite.com/2018/10/10/本地搭建nginx-https服务/index.html">
+<meta property="og:site_name" content="There is no magic">
+<meta property="og:description" content="前言  前几天，pm反馈页面被运营商劫持，出现了小广告，我们检查了项目内并没有http链接，理论上都是https应该不回被劫持，后来发现反馈的页面是外部的投放资源是http，另外我们的nginx配置的兜底策略关闭掉直接访问页面的http链接。所以需要在本地验证一波https的nginx配置。 一、相关原理 对称加密 非对称加密 https采用的是对称加密和非对称加密混合的方式 https tls握">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-09T20:26:28.400Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="本地搭建nginx https服务">
+<meta name="twitter:description" content="前言  前几天，pm反馈页面被运营商劫持，出现了小广告，我们检查了项目内并没有http链接，理论上都是https应该不回被劫持，后来发现反馈的页面是外部的投放资源是http，另外我们的nginx配置的兜底策略关闭掉直接访问页面的http链接。所以需要在本地验证一波https的nginx配置。 一、相关原理 对称加密 非对称加密 https采用的是对称加密和非对称加密混合的方式 https tls握">
+
+<link rel="canonical" href="http://yoursite.com/2018/10/10/本地搭建nginx-https服务/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>本地搭建nginx https服务 | There is no magic</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">There is no magic</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/10/本地搭建nginx-https服务/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="weiqian">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="There is no magic">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          本地搭建nginx https服务
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-10-10 16:43:19" itemprop="dateCreated datePublished" datetime="2018-10-10T16:43:19+00:00">2018-10-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-09 20:26:28" itemprop="dateModified" datetime="2021-05-09T20:26:28+00:00">2021-05-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index"><span itemprop="name">nginx</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>  前几天，pm反馈页面被运营商劫持，出现了小广告，我们检查了项目内并没有http链接，理论上都是https应该不回被劫持，后来发现反馈的页面是外部的投放资源是http，另外我们的nginx配置的兜底策略关闭掉直接访问页面的http链接。所以需要在本地验证一波https的nginx配置。</p>
+<h3 id="一、相关原理"><a href="#一、相关原理" class="headerlink" title="一、相关原理"></a>一、相关原理</h3><ol>
+<li>对称加密</li>
+<li>非对称加密</li>
+<li>https采用的是对称加密和非对称加密混合的方式</li>
+<li>https tls握手过程</li>
+<li>https session Key</li>
+<li>openssl</li>
+</ol>
+<h3 id="二、生成本地证书"><a href="#二、生成本地证书" class="headerlink" title="二、生成本地证书"></a>二、生成本地证书</h3><ol>
+<li><p>具体命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// a. 准备工作，这里新建目录在～，遇到一个建desktop，后面的nginx404的坑原因不明</span><br><span class="line"><span class="built_in">cd</span> ~ &amp;&amp; mkdir sshkey &amp;&amp; <span class="built_in">cd</span> sshkey &amp;&amp; mkdir demoCA &amp;&amp; <span class="built_in">cd</span> demoCA &amp;&amp; touch index.txt &amp;&amp; touch serial &amp;&amp; <span class="built_in">echo</span> <span class="string">"01"</span>&gt;./serial &amp;&amp; mkdir newcerts</span><br><span class="line">// b. 生成ca.key CA私钥</span><br><span class="line">openssl genrsa -des3 -out ca.key 2048</span><br><span class="line">// c. 生成ca.crt CA根证书（公钥）</span><br><span class="line">openssl req -new -x509 -days 7305 -key ca.key -out ca.crt</span><br><span class="line">// d. 生成www.example.com证书私钥：</span><br><span class="line">openssl genrsa -des3 -out www.example.com.pem 1024</span><br><span class="line">// e. 制作解密后的www.example.com证书私钥，一定要填写common.name不然生成东西为空</span><br><span class="line">openssl rsa -<span class="keyword">in</span> www.example.com.pem -out www.example.com.key</span><br><span class="line">// f. 生成签名请求</span><br><span class="line">openssl req -new -key www.example.com.pem -out www.example.com.csr</span><br><span class="line">// g. 用ca进行签名</span><br><span class="line">openssl ca -policy policy_anything -days 1460 -cert ca.crt -keyfile ca.key -<span class="keyword">in</span> www.example.com.csr -out www.example.com.crt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>遇到问题</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// problem default_ca</span><br><span class="line">Using configuration from /private/etc/ssl/openssl.cnf</span><br><span class="line">variable lookup failed <span class="keyword">for</span> ca::default_ca</span><br><span class="line">// 将openssl安装目录下的openssl.cnf 拷贝到配置目录 </span><br><span class="line">cp /usr/<span class="built_in">local</span>/etc/openssl/openssl.cnf /private/etc/ssl/openssl.cnf</span><br><span class="line">//修改路径 置文件的dir的文件路径为之前创建的demoCA文件路径</span><br><span class="line">dir &gt;&gt; = /Users/weiqian/sshkey/demoCA &gt; &gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>具体操作演示</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ <span class="built_in">cd</span> ~ &amp;&amp; mkdir sshkey &amp;&amp;  <span class="built_in">cd</span> sshkey &amp;&amp; mkdir demoCA &amp;&amp; <span class="built_in">cd</span> demoCA &amp;&amp; touch index.txt &amp;&amp; touch serial &amp;&amp; <span class="built_in">echo</span> <span class="string">"01"</span>&gt;./serial &amp;&amp; mkdir newcerts</span><br><span class="line">➜  demoCA openssl genrsa -des3 -out ca.key 2048</span><br><span class="line"></span><br><span class="line">Generating RSA private key, 2048 bit long modulus</span><br><span class="line">................................................+++</span><br><span class="line">..............+++</span><br><span class="line">e is 65537 (0x10001)</span><br><span class="line">Enter pass phrase <span class="keyword">for</span> ca.key:</span><br><span class="line">Verifying - Enter pass phrase <span class="keyword">for</span> ca.key:</span><br><span class="line">➜  demoCA openssl req -new -x509 -days 7305 -key ca.key -out ca.crt</span><br><span class="line">Enter pass phrase <span class="keyword">for</span> ca.key:</span><br><span class="line">You are about to be asked to enter information that will be incorporated</span><br><span class="line">into your certificate request.</span><br><span class="line">What you are about to enter is what is called a Distinguished Name or a DN.</span><br><span class="line">There are quite a few fields but you can leave some blank</span><br><span class="line">For some fields there will be a default value,</span><br><span class="line">If you enter <span class="string">'.'</span>, the field will be left blank.</span><br><span class="line">-----</span><br><span class="line">Country Name (2 letter code) []:cn</span><br><span class="line">State or Province Name (full name) []:shenzhen</span><br><span class="line">Locality Name (eg, city) []:shenzhen</span><br><span class="line">Organization Name (eg, company) []:xxxxx</span><br><span class="line">Organizational Unit Name (eg, section) []:dp</span><br><span class="line">Common Name (eg, fully qualified host name) []:www.example.com</span><br><span class="line">Email Address []:</span><br><span class="line">➜  demoCA openssl genrsa -des3 -out www.example.com.pem 1024</span><br><span class="line">Generating RSA private key, 1024 bit long modulus</span><br><span class="line">..........++++++</span><br><span class="line">.......................++++++</span><br><span class="line">e is 65537 (0x10001)</span><br><span class="line">Enter pass phrase <span class="keyword">for</span> www.example.com.pem:</span><br><span class="line">Verifying - Enter pass phrase <span class="keyword">for</span> www.example.com.pem:</span><br><span class="line">➜  demoCA openssl rsa -<span class="keyword">in</span> www.example.com.pem -out www.example.com.key</span><br><span class="line">Enter pass phrase <span class="keyword">for</span> www.example.com.pem:</span><br><span class="line">writing RSA key</span><br><span class="line">➜  demoCA openssl req -new -key www.example.com.pem -out www.example.com.csr</span><br><span class="line">Enter pass phrase <span class="keyword">for</span> www.example.com.pem:</span><br><span class="line">You are about to be asked to enter information that will be incorporated</span><br><span class="line">into your certificate request.</span><br><span class="line">What you are about to enter is what is called a Distinguished Name or a DN.</span><br><span class="line">There are quite a few fields but you can leave some blank</span><br><span class="line">For some fields there will be a default value,</span><br><span class="line">If you enter <span class="string">'.'</span>, the field will be left blank.</span><br><span class="line">-----</span><br><span class="line">Country Name (2 letter code) []:cn</span><br><span class="line">State or Province Name (full name) []:shenzhen</span><br><span class="line">Locality Name (eg, city) []:shenzhen</span><br><span class="line"><span class="comment"># testoid2=$&#123;testoid1&#125;.5.6</span></span><br><span class="line">Organization Name (eg, company) []:xxxxx</span><br><span class="line">Organizational Unit Name (eg, section) []:dp</span><br><span class="line">Common Name (eg, fully qualified host name) []:www.example.com</span><br><span class="line">Email Address []:</span><br><span class="line"></span><br><span class="line">Please enter the following <span class="string">'extra'</span> attributes</span><br><span class="line">to be sent with your certificate request</span><br><span class="line">A challenge password []:</span><br><span class="line">➜  demoCA openssl ca -policy policy_anything -days 1460 -cert ca.crt -keyfile ca.key -<span class="keyword">in</span> www.example.com.csr -out www.example.com.crt</span><br><span class="line">Using configuration from /private/etc/ssl/openssl.cnf</span><br><span class="line">variable lookup failed <span class="keyword">for</span> ca::default_ca</span><br><span class="line">140735671473096:error:0E06D06C:configuration file routines:NCONF_get_string:no value:/BuildRoot/Library/Caches/com.apple.xbs/Sources/libressl/libressl-22.50.2/libressl/crypto/conf/conf_lib.c:323:group=ca name=default_ca</span><br><span class="line">➜  demoCA cp /usr/<span class="built_in">local</span>/etc/openssl/openssl.cnf /private/etc/ssl/openssl.cnf</span><br><span class="line">cp: /private/etc/ssl/openssl.cnf: Permission denied</span><br><span class="line">➜  demoCA sudo cp /usr/<span class="built_in">local</span>/etc/openssl/openssl.cnf /private/etc/ssl/openssl.cnf</span><br><span class="line">Password:</span><br><span class="line">➜  demoCA <span class="built_in">pwd</span></span><br><span class="line">/Users/weiqian/sshkey/demoCA</span><br><span class="line">➜  demoCA vim /private/etc/ssl/openssl.cnf</span><br><span class="line">➜  demoCA sudo vim /private/etc/ssl/openssl.cnf</span><br><span class="line">➜  demoCA openssl ca -policy policy_anything -days 1460 -cert ca.crt -keyfile ca.key -<span class="keyword">in</span> www.example.com.csr -out www.example.com.crt</span><br><span class="line">Using configuration from /private/etc/ssl/openssl.cnf</span><br><span class="line">Enter pass phrase <span class="keyword">for</span> ca.key:</span><br><span class="line">Check that the request matches the signature</span><br><span class="line">Signature ok</span><br><span class="line">Certificate Details:</span><br><span class="line">        Serial Number: 1 (0x1)</span><br><span class="line">        Validity</span><br><span class="line">            Not Before: Oct 10 15:32:09 2018 GMT</span><br><span class="line">            Not After : Oct  9 15:32:09 2022 GMT</span><br><span class="line">        Subject:</span><br><span class="line">            countryName               = cn</span><br><span class="line">            stateOrProvinceName       = shenzhen</span><br><span class="line">            localityName              = shenzhen</span><br><span class="line">            organizationName          = xxxxx</span><br><span class="line">            organizationalUnitName    = dp</span><br><span class="line">            commonName                = www.example.com</span><br><span class="line">        X509v3 extensions:</span><br><span class="line">            X509v3 Basic Constraints:</span><br><span class="line">                CA:FALSE</span><br><span class="line">            Netscape Comment:</span><br><span class="line">                OpenSSL Generated Certificate</span><br><span class="line">            X509v3 Subject Key Identifier:</span><br><span class="line">                F1:2E:2B:F6:C9:8E:3F:34:B9:A7:B8:96:45:92:21:47:35:54:F2:84</span><br><span class="line">            X509v3 Authority Key Identifier:</span><br><span class="line">                DirName:/C=cn/ST=shenzhen/L=shenzhen/O=xxxxx/OU=dp/CN=www.example.com</span><br><span class="line">                serial:F8:D7:C0:D0:73:1E:B4:91</span><br><span class="line"></span><br><span class="line">Certificate is to be certified until Oct  9 15:32:09 2022 GMT (1460 days)</span><br><span class="line">Sign the certificate? [y/n]:y</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">1 out of 1 certificate requests certified, commit? [y/n]y</span><br><span class="line">Write out database with 1 new entries</span><br><span class="line">Data Base Updated</span><br><span class="line">➜  demoCA ls</span><br><span class="line">ca.crt              index.txt.attr      serial              www.example.com.csr</span><br><span class="line">ca.key              index.txt.old       serial.old          www.example.com.pem</span><br><span class="line">index.txt           newcerts            www.example.com.crt</span><br><span class="line">➜  demoCA sudo vim /etc/hosts</span><br><span class="line">Password:</span><br><span class="line">➜  demoCA <span class="built_in">cd</span> ..</span><br><span class="line">➜  sshkey touch nginx-https.conf</span><br><span class="line">➜  sshkey vim nginx-https.conf</span><br><span class="line">➜  sshkey vim index.html</span><br><span class="line">➜  sshkey sudo nginx -s stop</span><br><span class="line">➜  sshkey sudo  nginx -c  /Users/weiqian/sshkey/nginx-https.conf</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="三、nginx配置"><a href="#三、nginx配置" class="headerlink" title="三、nginx配置"></a>三、nginx配置</h3><ol>
+<li><p>修改host</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/hosts</span><br><span class="line">127.0.0.1 www.example.com</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>nginx-https.conf</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">user</span> root owner;</span><br><span class="line"><span class="attribute">worker_processes</span> <span class="number">1</span>;</span><br><span class="line"><span class="section">events</span> &#123;</span><br><span class="line"> <span class="attribute">worker_connections</span> <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line">http&#123;</span><br><span class="line">  server&#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span> www.example.com;</span><br><span class="line">    <span class="attribute">root</span> /Users/weiqian/sshkey;</span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">      <span class="attribute">return</span>   <span class="number">301</span>  https://<span class="variable">$host</span><span class="variable">$request_uri</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> <span class="section">server</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span> ssl;</span><br><span class="line">    <span class="attribute">server_name</span> www.example.com;</span><br><span class="line">    <span class="attribute">root</span> /Users/weiqian/sshkey;</span><br><span class="line">    <span class="attribute">ssl_certificate</span>       /Users/weiqian/sshkey/demoCA/www.example.com.crt; </span><br><span class="line">    <span class="attribute">ssl_certificate_key</span>   /Users/weiqian/sshkey/demoCA/www.example.com.key; </span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">      <span class="attribute">index</span> index.html;</span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="attribute">location</span> /produk-digital/m &#123;</span><br><span class="line">        <span class="attribute">try_files</span>     <span class="variable">$uri</span>      /digital-product/m/index.html;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="attribute">location</span> = /digital-product/m/index.html &#123;</span><br><span class="line">        <span class="attribute">alias</span>       /Users/weiqian/sshkey/index.html;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行nginx</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo nginx -s stop</span><br><span class="line">sudo  nginx -c  /Users/weiqian/sshkey/nginx-https.conf</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>访问 <a href="http://www.example.com" target="_blank" rel="noopener">www.example.com</a></p>
+<h3 id="四、chrome将证书设置为始终信任"><a href="#四、chrome将证书设置为始终信任" class="headerlink" title="四、chrome将证书设置为始终信任"></a>四、chrome将证书设置为始终信任</h3><ol>
+<li>打开浏览器，访问 <a href="http://www.example.com，点击=&gt;tab不安全=&gt;证书=&gt;图标拖到桌面" target="_blank" rel="noopener">www.example.com，点击=&gt;tab不安全=&gt;证书=&gt;图标拖到桌面</a></li>
+<li>打开钥匙串，把桌面的证书拖进去[系统|证书]，选择始终信任</li>
+<li>重新访问<a href="http://www.example.com，页面内容显示test" target="_blank" rel="noopener">www.example.com，页面内容显示test</a> https example</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/nginx/" rel="tag"># nginx</a>
+              <a href="/tags/https/" rel="tag"># https</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/10/09/linux常用基础操作/" rel="prev" title="linux常用基础操作">
+      <i class="fa fa-chevron-left"></i> linux常用基础操作
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/10/11/nginx和lua的简单使用-OpenResty/" rel="next" title="nginx和lua的简单使用-openresty">
+      nginx和lua的简单使用-openresty <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一、相关原理"><span class="nav-number">2.</span> <span class="nav-text">一、相关原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、生成本地证书"><span class="nav-number">3.</span> <span class="nav-text">二、生成本地证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、nginx配置"><span class="nav-number">4.</span> <span class="nav-text">三、nginx配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、chrome将证书设置为始终信任"><span class="nav-number">5.</span> <span class="nav-text">四、chrome将证书设置为始终信任</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">weiqian</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">weiqian</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
